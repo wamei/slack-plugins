@@ -7,3 +7,4 @@ https://wamei.github.io/slack-plugins/mention.user.js
 
 ## SlackのProxyを通して表示できない画像を直接インライン展開する
 https://wamei.github.io/slack-plugins/inline-image.user.js
+![inline-image](https://user-images.githubusercontent.com/2811188/38767762-7e2d0fee-4022-11e8-8693-2be3c1d38d36.png)
