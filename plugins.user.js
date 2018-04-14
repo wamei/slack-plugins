@@ -11,8 +11,8 @@
     'use strict';
 
     const inject = (src) => {
-        $('body').append(`<script src="${src}">`);
+        $('body').prepend(`<script src="${src}">`);
     };
 
-    inject("https://wamei.github.io/slack-plugins/loader.js");
+    inject("https://wamei.github.io/slack-plugins/plugins.src.js");
 })();
