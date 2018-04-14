@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Wamei Slack Reply Plugins
+// @name         Wamei Slack Reply Plugin
 // @namespace    wamei
 // @version      0.1
 // @description  ChatWork風に返信できるようにする

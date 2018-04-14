@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Wamei Slack Mention Plugins
+// @name         Wamei Slack Mention Plugin
 // @namespace    wamei
 // @version      0.1
 // @description  mentionをChatWork風にハイライト表示する

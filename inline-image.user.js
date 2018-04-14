@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Wamei Slack Inline Image Plugins
+// @name         Wamei Slack Inline Image Plugin
 // @namespace    wamei
 // @version      0.1
 // @description  SlackのProxyを通して表示できない画像を直接インライン展開する
