@@ -22,9 +22,9 @@
         if (input.is('.ql-blank')) {
             input.empty();
         }
-        input.append(normalizeNewline(`<ts-mention data-id="${id}" data-label="@${name}" spellcheck="false" class="ts_tip_texty">@${name}</ts-mention>`));
+        input.append(normalizeNewline(`<ts-mention data-id="${id}" data-label="@${name}" spellcheck="false" class="ts_tip_texty">@${name}</ts-mention> `));
         if (selectedText != '') {
-            input.append(normalizeNewline(quoteText(`${selectedText}`)));
+            input.append(normalizeNewline(quoteText(`${selectedText}`) + '\n'));
         }
         selectedText = '';
         focusInputBox();
