@@ -1,0 +1,37 @@
+// ==UserScript==
+// @name         Wamei Slack Mention Plugins
+// @namespace    wamei
+// @version      0.1
+// @description  mentionをChatWork風にハイライト表示する
+// @author       wamei
+// @match        https://*.slack.com/*
+// ==/UserScript==
+
+(function() {
+    'use strict';
+
+    const target = document.querySelector('div.client_main_container');
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            const mentionColor = '#ddebd7';
+            const mentionHoverColor = '#e7efe4';
+            const messages = $(mutation.target).find('div.c-message');
+            const mention = (target) => {
+                target.css('background-color', mentionColor)
+                      .hover(function() {
+                          $(this).css('background-color', mentionHoverColor);
+                      }, function() {
+                          $(this).css('background-color', mentionColor);
+                      });
+            };
+            mention(messages.has('a[data-member-id="'+TS.model.user.id+'"]'));
+            mention(messages.has('span[data-broadcast-id="BKhere"]'));
+            mention(messages.has('span[data-broadcast-id="BKchannel"]'));
+        });
+    });
+    const config = {
+        childList: true,
+        subtree: true,
+    };
+    observer.observe(target, config);
+})();
