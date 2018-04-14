@@ -1,5 +1,7 @@
 # slack-plugins
-Slack使いやすくするためのUserScript
+Slack使いやすくするためのUserScript  
+[Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=ja)とかで使えばいいんではなかろうか  
+インストール後に下記のリンク踏めば使えるようになると思います☺️
 
 ## mentionをChatWork風にハイライト表示する
 https://wamei.github.io/slack-plugins/mention.user.js
