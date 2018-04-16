@@ -1,6 +1,6 @@
-export default class MessageInput {
-    constructor() {
-        this.$input = $("#msg_input > .ql-editor");
+class MessageInput {
+    get $input() {
+        return $("#msg_input > .ql-editor");
     }
 
     focus() {
@@ -38,3 +38,5 @@ export default class MessageInput {
         this.$input.append(this.normalizeNewline(this.quoteText(text)));
     }
 }
+const messageInput = new MessageInput();
+export default messageInput;
