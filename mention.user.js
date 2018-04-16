@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Wamei Slack Mention Plugin
 // @namespace    wamei
-// @version      0.1
+// @version      0.2
 // @description  mentionをChatWork風にハイライト表示する
 // @author       wamei
 // @match        https://*.slack.com/*
@@ -14,5 +14,5 @@
         $('body').prepend(`<script src="${src}">`);
     };
 
-    inject("https://wamei.github.io/slack-plugins/mention.src.js");
+    inject("https://wamei.github.io/slack-plugins/dist/mention.js");
 })();
