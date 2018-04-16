@@ -14,7 +14,8 @@ import MessageInput from './class/message-input.js';
         }
         messageInput.appendText(`<ts-mention data-id="${id}" data-label="@${name}" spellcheck="false" class="ts_tip_texty">@${name}</ts-mention> `);
         if (replyButton.selectedText != '') {
-            messageInput.appendQuotedText(`${replyButton.selectedText}` + '\n');
+            messageInput.appendQuotedText(`${replyButton.selectedText}`);
+            messageInput.appendText('');
         }
         messageInput.focus();
     });
