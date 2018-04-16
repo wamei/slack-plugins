@@ -14,12 +14,16 @@ class MessageInput {
         input.focus();
     }
 
-    normalizeNewline(text) {
+    normalize(text) {
+        return text.replace(/<\/blockquote>/g, '$1\n').replace(/<br>/g, '\n');
+    }
+
+    convertNewline(text) {
         return '<p>' + text.replace(/\n/g, '</p><p>') + '</p>';
     }
 
     quoteText(text) {
-        return "> " + text.replace(/\n/g, "\n> ").replace(/<.+?>/g, "");
+        return ">" + text.replace(/\n/g, "\n>").replace(/<.+?>/g, "");
     }
 
     isEmpty() {
@@ -31,11 +35,11 @@ class MessageInput {
     }
 
     appendText(text) {
-        this.$input.append(this.normalizeNewline(text));
+        this.$input.append(this.convertNewline(this.normalize(text)));
     }
 
     appendQuotedText(text) {
-        this.$input.append(this.normalizeNewline(this.quoteText(text)));
+        this.$input.append(this.convertNewline(this.quoteText(this.normalize(text))));
     }
 }
 const messageInput = new MessageInput();
