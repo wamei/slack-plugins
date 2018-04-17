@@ -12,6 +12,16 @@ class Util {
             }
         }
     }
+
+    executeOnLoad(target, callback) {
+        const checker = () => {
+            if (!eval(target)) {
+                setTimeout(checker, 1);
+            }
+            callback();
+        };
+        checker();
+    };
 }
 const util = new Util();
 export default util;
