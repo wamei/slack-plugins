@@ -27,3 +27,7 @@ https://wamei.github.io/slack-plugins/inline-image.user.js
 ![inline-image](https://user-images.githubusercontent.com/2811188/38767762-7e2d0fee-4022-11e8-8693-2be3c1d38d36.png)
 #### クリックすればモーダル表示されます
 ![modal-image](https://user-images.githubusercontent.com/2811188/38856326-13c046bc-4261-11e8-94bf-da6e54d5dff3.PNG)
+
+## 打鍵中のステータスを表示させない
+https://wamei.github.io/slack-plugins/suspend-typing-status.user.js  
+標準オプションのものとは違って他人に自分の打鍵中ステータスが表示されなくなる
