@@ -34,7 +34,7 @@ export default class MenuActionButton {
         </div>
       </header>
 
-      <div class="viewer">
+      <div class="viewer" id="fs_modal_image_viewer">
         <div class="images">
           <figure class="scaled">
             <img src="${this.url}" alt="" class="scaled_image no_zoom">
@@ -49,7 +49,7 @@ export default class MenuActionButton {
     </div>
   </div>
 </div>`);
-        this.$element.find('#fs_modal_close_btn').click(() => {
+        this.$element.find('#fs_modal_close_btn, #fs_modal_image_viewer').click(() => {
             this.$element.remove();
         });
     }
