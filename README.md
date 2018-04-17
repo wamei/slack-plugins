@@ -19,6 +19,7 @@ mentionを挿入します
 - 引用ボタン  
 メッセージの引用を挿入します  
 範囲選択しながら押すと該当部分のみを引用します  
+
 ![reply](https://user-images.githubusercontent.com/2811188/38855966-09474484-4260-11e8-9c0f-733446ae075b.PNG)
 
 ## SlackのProxyを通して表示できない画像を直接インライン展開する
