@@ -1,3 +1,5 @@
+import Util from './util.js';
+
 class MessageMenu {
     constructor() {
         this.wholeText = '';
@@ -32,17 +34,7 @@ class MessageMenu {
                 if (wholeText) {
                     this.wholeText = wholeText;
                 }
-                while(true) {
-                    let userId = message.find('.c-message__gutter a.c-avatar').attr('href');
-                    if (userId) {
-                        this.userId = userId.split('/')[2];
-                        break;
-                    }
-                    message = message.prev();
-                    if (message.length == 0) {
-                        break;
-                    }
-                }
+                this.userId = Util.getUserIdFromMessage(message);
             });
         });
         this.observer.observe(target, {

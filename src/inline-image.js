@@ -1,3 +1,6 @@
+import ModalImage from './class/modal-image.js';
+import Util from './class/util.js';
+
 (function() {
     'use strict';
 
@@ -9,6 +12,7 @@
                 if ($this.next('span.c-message_attachment_inline').length > 0) {
                     return;
                 }
+                const userId = Util.getUserIdFromMessage($this.closest('.c-virtual_list__item'));
                 const url = $this.text();
                 $this.after(
                     $(`
@@ -17,6 +21,13 @@
     <a role="link" tabindex="0" target="_blank" class="c-message_attachment__image" href="${url}" rel="noopener noreferrer" style="text-indent: 0;"><img src="${url}" style="max-width: 360px; max-height:210px;"></a>
   </div>
 </span>`)
+                        .click((e) => {
+                            event.preventDefault();
+                            event.stopPropagation();
+                            const modal = new ModalImage(url, TS.model.members.find((user) => { return user.id == userId; }));
+                            $('body').append(modal.$element);
+                            return false;
+                        })
                 );
             });
         });
