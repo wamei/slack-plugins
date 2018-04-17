@@ -7,30 +7,34 @@ import Util from './class/util.js';
     const target = document.querySelector('div.client_main_container');
     const observer = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
-            $(mutation.target).find('div.c-message').find('a:contains(.png), a:contains(.jpg), a:contains(.jpeg), a:contains(.gif), a:contains(.bmp)').not('.c-message_attachment__image').each((i, elm) => {
-                const $this = $(elm);
-                if ($this.next('span.c-message_attachment_inline').length > 0) {
-                    return;
-                }
-                const userId = Util.getUserIdFromMessage($this.closest('.c-virtual_list__item'));
-                const url = $this.text();
-                $this.after(
-                    $(`
+            $(mutation.target)
+                .find('div.c-message')
+                .find('a:contains(.png), a:contains(.jpg), a:contains(.jpeg), a:contains(.gif), a:contains(.bmp)')
+                .not('.c-message_attachment__image')
+                .not('.c-message__file_link').each((i, elm) => {
+                    const $this = $(elm);
+                    if ($this.next('span.c-message_attachment_inline').length > 0) {
+                        return;
+                    }
+                    const userId = Util.getUserIdFromMessage($this.closest('.c-virtual_list__item'));
+                    const url = $this.text();
+                    $this.after(
+                        $(`
 <span class="c-message_attachment_inline">
   <div data-expanded="true" data-qa-expandable-container-is-expanded="true">
     <a role="link" tabindex="0" target="_blank" class="c-message_attachment__image" href="${url}" rel="noopener noreferrer" style="text-indent: 0;"><img src="${url}" style="max-width: 360px; max-height:210px;"></a>
   </div>
 </span>`)
-                        .click((e) => {
-                            event.preventDefault();
-                            event.stopPropagation();
-                            const modal = new ModalImage(url, TS.model.members.find((user) => { return user.id == userId; }));
-                            $('body').append(modal.$element);
-                            modal.$element.get(0).focus();
-                            return false;
-                        })
-                );
-            });
+                            .click((e) => {
+                                event.preventDefault();
+                                event.stopPropagation();
+                                const modal = new ModalImage(url, TS.model.members.find((user) => { return user.id == userId; }));
+                                $('body').append(modal.$element);
+                                modal.$element.get(0).focus();
+                                return false;
+                            })
+                    );
+                });
         });
     });
     const config = {
