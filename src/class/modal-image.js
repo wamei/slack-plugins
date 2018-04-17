@@ -48,7 +48,13 @@ export default class MenuActionButton {
       </div>
     </div>
   </div>
-</div>`);
+</div>`)
+            .keydown((e) => {
+                event.preventDefault();
+                event.stopPropagation();
+                if (e.keyCode === 27) this.$element.remove();
+                return false;
+            });
         this.$element.find('#fs_modal_close_btn, #fs_modal_image_viewer').click(() => {
             this.$element.remove();
         });

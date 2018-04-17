@@ -26,6 +26,7 @@ import Util from './class/util.js';
                             event.stopPropagation();
                             const modal = new ModalImage(url, TS.model.members.find((user) => { return user.id == userId; }));
                             $('body').append(modal.$element);
+                            modal.$element.get(0).focus();
                             return false;
                         })
                 );
