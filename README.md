@@ -11,9 +11,15 @@ https://wamei.github.io/slack-plugins/mention.user.js
 ![mention](https://user-images.githubusercontent.com/2811188/38767201-4ea94346-4018-11e8-8a3d-c57035311a2e.png)
 
 ## ChatWork風に返信する
-https://wamei.github.io/slack-plugins/reply.user.js  
-テキストを範囲選択してから返信ボタンを押すと引用付きになります
-![reply](https://user-images.githubusercontent.com/2811188/38770065-fef0dc58-4047-11e8-9a1e-28cd5724140a.png)
+https://wamei.github.io/slack-plugins/reply.user.js  
+- 返信ボタン  
+mentionを挿入します  
+範囲選択しながら押すと引用も挿入されます  
+  
+- 引用ボタン  
+メッセージの引用を挿入します  
+範囲選択しながら押すと該当部分のみを引用します  
+![reply](https://user-images.githubusercontent.com/2811188/38855966-09474484-4260-11e8-9c0f-733446ae075b.PNG)
 
 ## SlackのProxyを通して表示できない画像を直接インライン展開する
 https://wamei.github.io/slack-plugins/inline-image.user.js
