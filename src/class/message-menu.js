@@ -34,7 +34,10 @@ class MessageMenu {
                 if (wholeText) {
                     this.wholeText = wholeText;
                 }
-                this.userId = Util.getUserIdFromMessage(message);
+                const userId = Util.getUserIdFromMessage(message);
+                if (userId) {
+                    this.userId = userId;
+                }
             });
         });
         this.observer.observe(target, {
