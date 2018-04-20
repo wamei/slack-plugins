@@ -15,7 +15,7 @@ class MessageInput {
     }
 
     normalize(text) {
-        return text.replace(/<\/blockquote>/g, '$1\n').replace(/<br>/g, '\n');
+        return text.replace(/(<\/blockquote>)/g, '$1\n').replace(/<br>/g, '\n');
     }
 
     convertNewline(text) {

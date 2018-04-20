@@ -2,9 +2,7 @@ import Util from './util.js';
 
 class MessageMenu {
     constructor() {
-        this.wholeText = '';
-        this.selectedText = '';
-        this.userId = 0;
+        this.classAdded = 'wamei-added';
         this.buttons = [];
 
         this.mount();
@@ -13,7 +11,7 @@ class MessageMenu {
     append(menuActionButton) {
         this.buttons.unshift(menuActionButton);
         menuActionButton.$element.on('mousedown', () => {
-            this.selectedText = window.getSelection().toString();
+            menuActionButton.selectedMessage = window.getSelection().toString() || '';
         });
         return this;
     }
@@ -22,22 +20,27 @@ class MessageMenu {
         const target = document.querySelector('div.client_main_container');
         this.observer = new MutationObserver((mutations) => {
             mutations.forEach((mutation) => {
-                const menu = $(mutation.target).find('div.c-message_actions__container').not('.wamei-added').addClass('wamei-added');
-                if (!menu) {
-                    return;
-                }
-                this.buttons.forEach((button) => {
-                    menu.prepend(button.$element);
+                $(mutation.target).find('div.c-message_actions__container').not(`.${this.classAdded}`).addClass(this.classAdded).each((i, elm) => {
+                    const menu = $(elm);
+                    const message = menu.closest('.c-virtual_list__item');
+                    const wholeText = message.find('.c-message__body').html() || '';
+                    let attachments = '';
+                    message.find('.c-message__attachments').not(':has(.c-message_attachment__delete)').find('.c-message_attachment__body .c-message_attachment__row').each((i, elm) => {
+                        attachments += `\n> ${$(elm).html()}`;
+                        const $titleLink = $(elm).find('a.c-message_attachment__title_link');
+                        if ($titleLink.length > 0) {
+                            attachments += `\n> ${$titleLink.attr('href')}`;
+                        }
+                    });
+                    const userId = Util.getUserIdFromMessage(message);
+                    this.buttons.forEach((button) => {
+                        button.wholeMessage = wholeText + attachments;
+                        button.userId = userId;
+                        if (button.isAvailable()) {
+                            menu.prepend(button.$element);
+                        }
+                    });
                 });
-                let message = menu.closest('.c-virtual_list__item');
-                const wholeText = message.find('.c-message__body').html();
-                if (wholeText) {
-                    this.wholeText = wholeText;
-                }
-                const userId = Util.getUserIdFromMessage(message);
-                if (userId) {
-                    this.userId = userId;
-                }
             });
         });
         this.observer.observe(target, {
