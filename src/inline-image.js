@@ -17,7 +17,7 @@ import Util from './class/util.js';
                         return;
                     }
                     const userId = Util.getUserIdFromMessage($this.closest('.c-virtual_list__item'));
-                    const url = $this.text();
+                    const url = decodeURIComponent($this.attr('href').replace(/^https:\/\/slack-redir.net\/link\?url=/, ''));
                     $this.after(
                         $(`
 <span class="c-message_attachment_inline">
