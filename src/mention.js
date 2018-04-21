@@ -11,7 +11,7 @@
                   $(this).css('background-color', mentionColor);
               });
     };
-    const target = document.querySelector('div.client_main_container');
+    const target = document.querySelector('div#messages_container');
     const observer = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
             const messages = $(mutation.target).find('div.c-message');

@@ -17,7 +17,7 @@ class MessageMenu {
     }
 
     mount() {
-        const target = document.querySelector('div.client_main_container');
+        const target = document.querySelector('div#messages_container');
         this.observer = new MutationObserver((mutations) => {
             mutations.forEach((mutation) => {
                 $(mutation.target).find('div.c-message_actions__container').not(`.${this.classAdded}`).addClass(this.classAdded).each((i, elm) => {

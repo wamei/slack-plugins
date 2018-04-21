@@ -4,7 +4,7 @@ import Util from './class/util.js';
 (function() {
     'use strict';
 
-    const target = document.querySelector('div.client_main_container');
+    const target = document.querySelector('div#messages_container');
     const observer = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
             $(mutation.target)
