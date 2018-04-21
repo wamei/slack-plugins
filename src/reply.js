@@ -34,7 +34,7 @@ import MenuActionButton from './class/menu-action-button.js';
         MessageInput.focus();
     });
     replyButton.isAvailable = function() {
-        if (replyButton.userId.indexOf('B') == 0) {
+        if (!replyButton.userId || replyButton.userId.indexOf('B') == 0) {
             return false;
         }
         return true;
