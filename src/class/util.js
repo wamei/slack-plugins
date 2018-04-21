@@ -15,10 +15,11 @@ class Util {
 
     executeOnLoad(target, callback) {
         const checker = () => {
-            if (!eval(target)) {
-                setTimeout(checker, 1);
+            let loaded = eval(target);
+            if (!loaded) {
+                return setTimeout(checker, 1);
             }
-            callback();
+            return callback(loaded);
         };
         checker();
     };
