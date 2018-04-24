@@ -27,7 +27,7 @@ export default class MessageInput {
     }
 
     quoteText(text) {
-        return ">" + text.replace(/\n/g, "\n>").replace(/<.+?>/g, "");
+        return (">" + text.replace(/\n/g, "\n>").replace(/<.+?>/g, "")).replace(/>http/g, '> http');
     }
 
     isEmpty() {
