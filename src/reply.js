@@ -27,7 +27,7 @@ import MenuActionButton from './class/menu-action-button.js';
         if (messageInput.isEmpty()) {
             messageInput.clear();
         }
-        messageInput.appendText(`<ts-mention data-id="${id}" data-label="@${name}" spellcheck="false" class="ts_tip_texty">@${name}</ts-mention> `);
+        messageInput.appendText(`<span data-id="${id}" data-label="@${name}" spellcheck="false" class="c-member_slug c-member_slug--link ts_tip_texty">@${name}</span> `);
         if (this.selectedMessage != '') {
             messageInput.appendQuotedText(`${this.selectedMessage}`);
             messageInput.appendText('');
