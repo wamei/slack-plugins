@@ -3,15 +3,19 @@ Slack使いやすくするためのUserScript
 [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=ja)とかで使えばいいんではなかろうか  
 インストール後に下記のリンク踏めば使えるようになると思います☺️
 
-- [最新のやつを全部入れたい人用](#最新のやつを全部入れたい人用)
 - [mentionをChatWork風にハイライト表示する](#mentionをchatwork風にハイライト表示する)
 - [ChatWork風に返信する](#chatwork風に返信する)
 - [SlackのProxyを通して表示できない画像を直接インライン展開する](#slackのproxyを通して表示できない画像を直接インライン展開する)
 - [打鍵中のステータスを表示させない](#打鍵中のステータスを表示させない)
 - [チャンネル内検索をやりやすくする](#チャンネル内検索をやりやすくする)
 
-### 最新のやつを全部入れたい人用
+#### 上記をまとめた版
 https://wamei.github.io/slack-plugins/loaders/plugins.user.js
+
+
+#### オプション
+- [[fluid] Dockアイコンに未読数の表示](#fluid-dockアイコンに未読数の表示)
+- [メッセージの文字サイズだけを調整する](#メッセージの文字サイズだけを調整する)
 
 ## mentionをChatWork風にハイライト表示する
 https://wamei.github.io/slack-plugins/loaders/mention.user.js
@@ -43,3 +47,14 @@ https://wamei.github.io/slack-plugins/loaders/suspend-typing-status.user.js
 https://wamei.github.io/slack-plugins/loaders/search-in-channel.user.js  
 ボタンを押すとin:~が自動入力される
 ![search-in-channel](https://user-images.githubusercontent.com/2811188/39082895-7d1c03bc-4595-11e8-9a88-64a4777437b2.png)
+
+# オプション
+
+## [fluid] Dockアイコンに未読数の表示
+https://wamei.github.io/slack-plugins/loaders/fluid-badge.user.js  
+
+## メッセージの文字サイズだけを調整する
+https://wamei.github.io/slack-plugins/loaders/message-font-size.user.js  
+![message-font-size](https://user-images.githubusercontent.com/2811188/39223602-ecfaaf9a-487d-11e8-93b3-603c305f2b4a.png)
+- ``alt`` + ``+``: 文字の拡大
+- ``alt`` + ``-``: 文字の縮小
