@@ -16,8 +16,12 @@ import Util from './class/util.js';
                     if ($this.next('span.c-message_attachment_inline').length > 0) {
                         return;
                     }
+                    const href = $this.attr('href');
+                    if ($this.parents('.c-message_attachment').find(`.c-message_attachment__image[href="${href}"]`).length > 0) {
+                        return;
+                    }
                     const userId = Util.getUserIdFromMessage($this.closest('.c-virtual_list__item'));
-                    const url = decodeURIComponent($this.attr('href').replace(/^https:\/\/slack-redir.net\/link\?url=/, ''));
+                    const url = decodeURIComponent(href.replace(/^https:\/\/slack-redir.net\/link\?url=/, ''));
                     $this.after(
                         $(`
 <span class="c-message_attachment_inline">
