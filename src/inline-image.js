@@ -17,11 +17,11 @@ import Util from './class/util.js';
                         return;
                     }
                     const href = $this.attr('href');
-                    if ($this.parents('.c-message_attachment').find(`.c-message_attachment__image[href="${href}"]`).length > 0) {
+                    const url = decodeURIComponent(href.replace(/^https:\/\/slack-redir.net\/link\?url=/, ''));
+                    if ($this.parents('.c-message_attachment').find(`.c-message_attachment__image[href="${href}"], .c-message_attachment__image[href="${url}"]`).length > 0) {
                         return;
                     }
                     const userId = Util.getUserIdFromMessage($this.closest('.c-virtual_list__item'));
-                    const url = decodeURIComponent(href.replace(/^https:\/\/slack-redir.net\/link\?url=/, ''));
                     $this.after(
                         $(`
 <span class="c-message_attachment_inline">
