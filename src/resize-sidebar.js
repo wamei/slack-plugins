@@ -11,7 +11,7 @@ import Util from './class/util.js';
         $('.client_channels_list_container').css('flex-basis', `${width}px`);
         $('.p-channel_sidebar').css('width', `${width}px`);
         $('#col_channels').css('width', `${width}px`);
-        Util.settings.set(KEY, width);
+        return width;
     };
 
     const KEY = 'sidebar-width';
@@ -24,6 +24,10 @@ import Util from './class/util.js';
         const resizer = $('<div class="wamei-sidebar-resizer" style="position:absolute;right:-3px;top:0;height:100%;width:3px;cursor:col-resize;z-index:1000;" draggable="true"></div>')
             .on('drag', (event) => {
                 resize(event.clientX);
+            }).on('dragend', (event) => {
+                let width = event.clientX;
+                width = resize(width);
+                Util.settings.set(KEY, width);
             });
         $('.client_channels_list_container').css('max-width', `${maxWidth}px`).append(resizer);
     });
