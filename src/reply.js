@@ -11,6 +11,9 @@ import MenuActionButton from './class/menu-action-button.js';
         if (messageInput.isEmpty()) {
             messageInput.clear();
         }
+        const id = this.userId;
+        const user = TS.model.members.filter((user) => user.id == id)[0];
+        messageInput.appendQuotedText(`*${user.real_name}*`);
         if (this.selectedMessage != '') {
             messageInput.appendQuotedText(`${this.selectedMessage}`);
         } else {
