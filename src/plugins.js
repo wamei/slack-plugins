@@ -10,4 +10,5 @@
     inject("https://wamei.github.io/slack-plugins/dist/reply.js");
     inject("https://wamei.github.io/slack-plugins/dist/search-in-channel.js");
     inject("https://wamei.github.io/slack-plugins/dist/suspend-typing-status.js");
+    inject("https://wamei.github.io/slack-plugins/dist/resize-sidebar.js");
 })();

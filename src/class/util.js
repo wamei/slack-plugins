@@ -1,3 +1,4 @@
+const PREFIX = 'wamei:';
 class Util {
     getUserIdFromMessage(message) {
         message = message.closest('.c-virtual_list__item');
@@ -23,6 +24,28 @@ class Util {
         };
         checker();
     };
+
+    get settings() {
+        return {
+            set(key, value) {
+                try {
+                    localStorage.setItem(PREFIX + key, JSON.stringify(value));
+                } catch(e) {
+                }
+            },
+            get(key) {
+                try {
+                    const item = localStorage.getItem(PREFIX + key);
+                    if (item == null) {
+                        return null;
+                    }
+                    return JSON.parse(item);
+                } catch(e) {
+                    return null;
+                }
+            }
+        };
+    }
 }
 const util = new Util();
 export default util;
