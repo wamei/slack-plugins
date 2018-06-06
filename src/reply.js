@@ -1,6 +1,7 @@
 import MessageMenu from './class/message-menu.js';
 import MessageInput from './class/message-input.js';
 import MenuActionButton from './class/menu-action-button.js';
+import Util from './class/util.js';
 
 (function() {
     'use strict';
@@ -13,7 +14,8 @@ import MenuActionButton from './class/menu-action-button.js';
         }
         const id = this.userId;
         const user = TS.model.members.filter((user) => user.id == id)[0];
-        messageInput.appendQuotedText(`*${user.real_name}*`);
+        const name = user._display_name_normalized_lc || user._real_name_normalized_lc;
+        messageInput.appendQuotedText(`*${name}*`);
         if (this.selectedMessage != '') {
             messageInput.appendQuotedText(`${this.selectedMessage}`);
         } else {
@@ -46,4 +48,29 @@ import MenuActionButton from './class/menu-action-button.js';
 
     MessageMenu.append(replyButton);
     MessageMenu.append(quoteButton);
+
+    const treatedClass = 'wamei-quote-icon-treated';
+    const target = document.querySelector('div#messages_container');
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            $(mutation.target)
+                .find(`div.c-message blockquote b:not(.${treatedClass})`).each((i, elm) => {
+                    const $this = $(elm);
+                    const name = $this.text();
+                    const user = TS.model.members.filter((user) => {
+                        return user._display_name_normalized_lc == name || user._real_name_normalized_lc == name;
+                    });
+                    $this.addClass(treatedClass);
+                    if (user.length == 0) {
+                        return;
+                    }
+                    $this.html(`<img class="c-message_attachment__author_icon" alt="${user[0].real_name}" src="${user[0].profile.image_24}" width="16" height="16">${user[0].real_name}`);
+                });
+        });
+    });
+    const config = {
+        childList: true,
+        subtree: true,
+    };
+    observer.observe(target, config);
 })();
