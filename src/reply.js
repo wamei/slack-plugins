@@ -13,9 +13,11 @@ import Util from './class/util.js';
             messageInput.clear();
         }
         const id = this.userId;
-        const user = TS.model.members.filter((user) => user.id == id)[0];
-        const name = user._display_name_normalized_lc || user._real_name_normalized_lc;
-        messageInput.appendQuotedText(`*${name}*`);
+        if (id != null) {
+            const user = TS.model.members.filter((user) => user.id == id)[0];
+            const name = user._display_name_normalized_lc || user._real_name_normalized_lc;
+            messageInput.appendQuotedText(`*${name}*`);
+        }
         if (this.selectedMessage != '') {
             messageInput.appendQuotedText(`${this.selectedMessage}`);
         } else {
