@@ -8,6 +8,7 @@ Slack使いやすくするためのUserScript
 - [SlackのProxyを通して表示できない画像を直接インライン展開する](#slackのproxyを通して表示できない画像を直接インライン展開する)
 - [打鍵中のステータスを表示させない](#打鍵中のステータスを表示させない)
 - [チャンネル内検索をやりやすくする](#チャンネル内検索をやりやすくする)
+- [サイドバーの幅を調節できるようにする](#サイドバーの幅を調節できるようにする)
 
 #### 上記をまとめた版
 https://wamei.github.io/slack-plugins/loaders/plugins.user.js
@@ -47,6 +48,10 @@ https://wamei.github.io/slack-plugins/loaders/suspend-typing-status.user.js
 https://wamei.github.io/slack-plugins/loaders/search-in-channel.user.js  
 ボタンを押すとin:~が自動入力される
 ![search-in-channel](https://user-images.githubusercontent.com/2811188/39082895-7d1c03bc-4595-11e8-9a88-64a4777437b2.png)
+
+## サイドバーの幅を調節できるようにする
+https://wamei.github.io/slack-plugins/loaders/resize-sidebar.user.js  
+サイドバーの幅がアルファベットでの最大文字数を元に調整されているので日本語だと表示しきれずに「...」になっていたので
 
 # オプション
 
