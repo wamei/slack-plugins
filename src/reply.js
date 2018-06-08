@@ -80,14 +80,14 @@ import Util from './class/util.js';
     Util.executeOnLoad('TS.client.ui.sendMessage', () => {
         const _old = TS.client.ui.sendMessage;
         TS.client.ui.sendMessage = function(params, text) {
-            let matched = text.match(/^(<.*\/archives\/.+\|Re:>)<@.+\|(@.+)>([\s\S]*)/);
+            let matched = text.match(/(<.*\/archives\/.+\|Re:>)<@.+\|(@.+)>([\s\S]*)/);
             if (matched) {
                 TS.chat_history.add(text);
                 TS.api.call('chat.postMessage', {
                     channel: params.id,
                     link_names: true,
                     unfurl_links: false,
-                    text: text.replace(/^(<.*\/archives\/.+\|Re:>)<@.+\|(@.+)>/gm, '$1$2'),
+                    text: text.replace(/(<.*\/archives\/.+\|Re:>)<@.+\|(@.+)>/gm, '$1$2'),
                 }, (e, data) => {console.log(data);});
                 return;
             }
