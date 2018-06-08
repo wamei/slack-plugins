@@ -32,10 +32,12 @@ class MessageMenu {
                             attachments += `\n> ${$titleLink.attr('href')}`;
                         }
                     });
+                    const messageUri = Util.getMessageUriFromMessage(message);
                     const userId = Util.getUserIdFromMessage(message);
                     this.buttons.forEach((button) => {
                         button.wholeMessage = wholeText + attachments;
                         button.userId = userId;
+                        button.messageUri = messageUri;
                         if (button.isAvailable()) {
                             menu.prepend(button.$element);
                         }

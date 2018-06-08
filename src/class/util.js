@@ -13,6 +13,9 @@ class Util {
             }
         }
     }
+    getMessageUriFromMessage(message) {
+        return message.closest('.c-virtual_list__item').find('a.c-timestamp').attr('href');
+    }
 
     executeOnLoad(target, callback) {
         const checker = () => {

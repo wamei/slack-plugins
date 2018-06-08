@@ -6,6 +6,7 @@ export default class MenuActionButton {
         this.callback = callback;
 
         this.userId = null;
+        this.messageUri = null;
         this.selectedMessage = null;
         this.wholeMessage = null;
 
