@@ -17,6 +17,44 @@ class Util {
         return message.closest('.c-virtual_list__item').find('a.c-timestamp').attr('href');
     }
 
+    getUserByUserId(userId) {
+        let users;
+        if (userId.indexOf('B') == 0) {
+            users = TS.model.bots;
+        } else {
+            users = TS.model.members;
+        }
+        let user = users.filter((user) => user.id == userId);
+        if (user.length == 0) {
+            return null;
+        }
+        user = user[0];
+        user.is_bot = !(user.is_bot === false);
+        user.display_name = user._display_name_normalized_lc || user._real_name_normalized_lc || user.name;
+        user.avatar_icon = user.is_bot ? user.icons.image_36 : user.profile.image_24;
+        return user;
+    }
+
+    getUserByName(name) {
+        let user;
+        user = TS.model.members.filter((user) => {
+            return user._display_name_normalized_lc == name || user._real_name_normalized_lc == name;
+        });
+        if (user.length == 0) {
+            user = TS.model.bots.filter((user) => {
+                return user.name == name;
+            });
+        }
+        if (user.length == 0) {
+            return null;
+        }
+        user = user[0];
+        user.is_bot = !(user.is_bot === false);
+        user.display_name = user._display_name_normalized_lc || user._real_name_normalized_lc || user.name;
+        user.avatar_icon = user.is_bot ? user.icons.image_36 : user.profile.image_24;
+        return user;
+    }
+
     executeOnLoad(target, callback) {
         const checker = () => {
             let loaded = eval(target);
