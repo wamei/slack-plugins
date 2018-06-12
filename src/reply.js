@@ -85,7 +85,7 @@ import Util from './class/util.js';
                     channel: params.id,
                     link_names: true,
                     unfurl_links: false,
-                    text: text.replace(/(<.*\/archives\/.+\|Re:>)<@.+\|(@.+)>/gm, '$1$2'),
+                    text: text.replace(/<@.+\|(@.+)>/gm, '$1'),
                 }, (e, data) => {console.log(data);});
                 return;
             }
