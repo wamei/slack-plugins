@@ -11,7 +11,7 @@ setInterval(updateBadge, 1000);
 var mention_cnt = TS.model.all_unread_highlights_cnt;
 
 var connect = function() {
-    TS.api.call('rtm.connect', {})
+    TS.interop.api.call('rtm.connect', {})
         .then(function(ret) {
             var con = new WebSocket(ret.data.url);
             con.onopen = function() {
@@ -39,4 +39,4 @@ var connect = function() {
          return;
      }
      func();
- })('TS.api.call', connect);
+ })('TS.interop.api.call', connect);

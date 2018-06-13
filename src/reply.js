@@ -81,7 +81,7 @@ import Util from './class/util.js';
             let matched = text.match(/(<.*\/archives\/.+\|Re:>)<@.+\|(@.+)>([\s\S]*)/);
             if (matched) {
                 TS.chat_history.add(text);
-                TS.api.call('chat.postMessage', {
+                TS.interop.api.call('chat.postMessage', {
                     channel: params.id,
                     link_names: true,
                     unfurl_links: false,
