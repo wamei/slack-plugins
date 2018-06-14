@@ -78,7 +78,7 @@ import Util from './class/util.js';
     Util.executeOnLoad('TS.client.ui.sendMessage', () => {
         const _old = TS.client.ui.sendMessage;
         TS.client.ui.sendMessage = function(params, text) {
-            let matched = text.match(/(<.*\/archives\/.+\|Re:>)<@.+\|(@.+)>([\s\S]*)/);
+            let matched = text.match(/<.*\/archives\/.+\|Re:>/);
             if (matched) {
                 TS.chat_history.add(text);
                 TS.interop.api.call('chat.postMessage', {
