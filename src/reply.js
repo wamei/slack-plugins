@@ -83,9 +83,8 @@ import Util from './class/util.js';
                 TS.chat_history.add(text);
                 TS.interop.api.call('chat.postMessage', {
                     channel: params.id,
-                    link_names: true,
                     unfurl_links: false,
-                    text: text.replace(/<@.+\|(@.+)>/gm, '$1'),
+                    text: text.replace(/<(@.+)\|@.+>/gm, '<$1>'),
                 }, (e, data) => {console.log(data);});
                 return;
             }
