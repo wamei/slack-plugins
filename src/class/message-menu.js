@@ -1,3 +1,4 @@
+import Message from './message.js';
 import Util from './util.js';
 
 class MessageMenu {
@@ -10,50 +11,69 @@ class MessageMenu {
 
     append(menuActionButton) {
         this.buttons.unshift(menuActionButton);
-        menuActionButton.$element.on('mousedown', () => {
-            menuActionButton.selectedMessage = window.getSelection().toString() || '';
-        });
         return this;
     }
 
     mount() {
-        const target = document.querySelector('div#messages_container');
-        this.observer = new MutationObserver((mutations) => {
+        const mainTarget = document.querySelector('div#messages_container');
+        this.mainObserver = new MutationObserver((mutations) => {
             mutations.forEach((mutation) => {
-                $(mutation.target).find('div.c-message_actions__container').not(`.${this.classAdded}`).addClass(this.classAdded).each((i, elm) => {
-                    const menu = $(elm);
-                    const message = menu.closest('.c-virtual_list__item');
-                    const wholeText = message.find('.c-message__body').html() || '';
-                    let attachments = '';
-                    message.find('.c-message__attachments').not(':has(.c-message_attachment__delete)').find('.c-message_attachment__body .c-message_attachment__row').each((i, elm) => {
-                        attachments += `\n> ${$(elm).html()}`;
-                        const $titleLink = $(elm).find('a.c-message_attachment__title_link');
-                        if ($titleLink.length > 0) {
-                            attachments += `\n> ${$titleLink.attr('href')}`;
-                        }
-                    });
-                    const messageUri = Util.getMessageUriFromMessage(message);
-                    const userId = Util.getUserIdFromMessage(message);
-                    this.buttons.forEach((button) => {
-                        button.wholeMessage = wholeText + attachments;
-                        button.userId = userId;
-                        button.messageUri = messageUri;
-                        if (button.isAvailable()) {
-                            menu.prepend(button.$element);
-                        }
-                    });
-                });
+                this.applyButtons($(mutation.target).find('div.c-message_actions__container'), '#msg_input');
             });
         });
-        this.observer.observe(target, {
+        this.mainObserver.observe(mainTarget, {
             childList: true,
+            subtree: true,
+        });
+        const threadTarget = document.querySelector('div#convo_scroller');
+        this.threadObserver = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                this.applyButtons($(mutation.target).closest('div.action_hover_container'), 'div#convo_scroller .message_input');
+            });
+        });
+        this.threadObserver.observe(threadTarget, {
+            childList: true,
+            attributes: true,
             subtree: true,
         });
         return this;
     }
 
+    applyButtons($target, selectorInput) {
+        $target.not(`.${this.classAdded}`).addClass(this.classAdded).each((i, elm) => {
+            const menu = $(elm);
+            const $message = menu.closest('.c-virtual_list__item, ts-message');
+            const wholeText = $message.find('.c-message__body, .message_body').html() || '';
+            let attachments = '';
+            $message.find('.c-message__attachments').not(':has(.c-message_attachment__delete)').find('.c-message_attachment__body .c-message_attachment__row').each((i, elm) => {
+                attachments += `\n> ${$(elm).html()}`;
+                const $titleLink = $(elm).find('a.c-message_attachment__title_link');
+                if ($titleLink.length > 0) {
+                    attachments += `\n> ${$titleLink.attr('href')}`;
+                }
+            });
+            const messageUri = Util.getMessageUriFromMessage($message);
+            const userId = Util.getUserIdFromMessage($message);
+            const message = new Message(userId, messageUri, wholeText + attachments, selectorInput);
+            this.buttons.forEach((button) => {
+                const $element = button.createElement(message);
+                $element.on('mousedown', () => {
+                    message.selectedMessage = window.getSelection().toString() || '';
+                });
+                if (button.isAvailable(message)) {
+                    menu.prepend($element);
+                }
+            });
+        });
+    }
+
     unmount() {
-        this.observer.disconnect();
+        if (this.mainObserver) {
+            this.mainObserver.disconnect();
+        }
+        if (this.threadObserver) {
+            this.threadObserver.disconnect();
+        }
         return this;
     }
 }

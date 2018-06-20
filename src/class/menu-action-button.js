@@ -1,23 +1,22 @@
+import Message from './message.js';
+
 export default class MenuActionButton {
     constructor(label, iconClass, callback) {
         this.selectorMessage = '.c-virtual_list__item';
         this.label = label;
         this.iconClass = iconClass;
         this.callback = callback;
-
-        this.userId = null;
-        this.messageUri = null;
-        this.selectedMessage = null;
-        this.wholeMessage = null;
-
-        this.initElement();
     }
 
-    initElement() {
-        this.$element = $(`<button class="c-button-unstyled c-message_actions__button ${this.label}" type="button" aria-haspopup="true" aria-label="${this.label}"><i class="c-icon ${this.iconClass}" aria-hidden="true"></i></button>`)
-            .click(this.callback.bind(this))
+    isAvailable(message) {
+        return true;
+    }
+
+    createElement(message) {
+        const $element = $(`<button class="btn_msg_action c-button-unstyled c-message_actions__button ${this.label}" type="button" aria-haspopup="true" aria-label="${this.label}"><i class="c-icon ${this.iconClass}" aria-hidden="true"></i></button>`)
+            .click(() => { this.callback(message); })
             .hover(() => {
-                const offset = this.$element.offset();
+                const offset = $element.offset();
                 const label = $(`<div class="ReactModal__Content ReactModal__Content--after-open popover" tabindex="-1" aria-label="popover" style="position: absolute; left: ${offset.left}px; top: ${offset.top}px; outline: none; z-index:100000;"><div><div class="c-tooltip__tip c-tooltip__tip--top" data-qa="tooltip-tip">${this.label}<div class="c-tooltip__tip__arrow"></div></div></div></div>`).hide();
                 $(document.body).append(
                     $(`<div class="ReactModalPortal" id="${this.label}-tooltip"></div>`)
@@ -30,13 +29,6 @@ export default class MenuActionButton {
             }, () => {
                 $(`#${this.label}-tooltip`).remove();
             });
-    }
-
-    isAvailable() {
-        return true;
-    }
-
-    get $message() {
-        return this.$element.closest(this.selectorMessage);
+        return $element;
     }
 }

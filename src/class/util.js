@@ -1,9 +1,9 @@
 const PREFIX = 'wamei:';
 class Util {
     getUserIdFromMessage(message) {
-        message = message.closest('.c-virtual_list__item');
+        message = message.closest('.c-virtual_list__item, ts-message');
         while(true) {
-            let userId = message.find('.c-message__gutter a.c-avatar').attr('href');
+            let userId = message.find('.c-message__gutter a.c-avatar, a.message_sender').attr('href');
             if (userId) {
                 return userId.split('/')[2];
             }
@@ -14,7 +14,7 @@ class Util {
         }
     }
     getMessageUriFromMessage(message) {
-        return message.closest('.c-virtual_list__item').find('a.c-timestamp').attr('href');
+        return message.closest('.c-virtual_list__item, ts-message').find('a.c-timestamp, a.timestamp').attr('href');
     }
 
     getUserByUserId(userId) {

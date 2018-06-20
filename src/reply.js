@@ -6,44 +6,44 @@ import Util from './class/util.js';
 (function() {
     'use strict';
 
-    const selectorMessage = '.c-virtual_list__item';
-    const messageInput = new MessageInput('#msg_input');
-    const quoteButton = new MenuActionButton('メッセージを引用する', 'ts_icon_quote', function() {
+    const quoteButton = new MenuActionButton('メッセージを引用する', 'ts_icon_quote', function(message) {
+        const messageInput = new MessageInput(message.selectorInput);
         if (messageInput.isEmpty()) {
             messageInput.clear();
         }
-        if (this.userId != null) {
-            const user = Util.getUserByUserId(this.userId);
+        if (message.userId != null) {
+            const user = Util.getUserByUserId(message.userId);
             if (user) {
                 messageInput.appendQuotedText(`*${user.display_name}*`);
             }
         }
-        if (this.selectedMessage != '') {
-            messageInput.appendQuotedText(`${this.selectedMessage}`);
+        if (message.selectedMessage != '') {
+            messageInput.appendQuotedText(`${message.selectedMessage}`);
         } else {
-            messageInput.appendQuotedText(`${this.wholeMessage}`);
+            messageInput.appendQuotedText(`${message.wholeMessage}`);
         }
         messageInput.appendText('');
         messageInput.focus();
     });
 
-    const replyButton = new MenuActionButton('メッセージに返信する', 'c-icon--share-action" style="transform: scale(-1, 1);"', function() {
-        const user = Util.getUserByUserId(this.userId);
+    const replyButton = new MenuActionButton('メッセージに返信する', 'c-icon--share-action" style="transform: scale(-1, 1);"', function(message) {
+        const messageInput = new MessageInput(message.selectorInput);
+        const user = Util.getUserByUserId(message.userId);
         if (!user) {
             return;
         }
         if (messageInput.isEmpty()) {
             messageInput.clear();
         }
-        messageInput.appendText(`&lt;${location.origin}${this.messageUri}|Re:&gt;<span data-id="${this.userId}" data-label="@${user.display_name}" spellcheck="false" class="c-member_slug c-member_slug--link ts_tip_texty">@${user.display_name}</span>`);
-        if (this.selectedMessage != '') {
-            messageInput.appendQuotedText(`${this.selectedMessage}`);
+        messageInput.appendText(`&lt;${location.origin}${message.messageUri}|Re:&gt;<span data-id="${message.userId}" data-label="@${user.display_name}" spellcheck="false" class="c-member_slug c-member_slug--link ts_tip_texty">@${user.display_name}</span>`);
+        if (message.selectedMessage != '') {
+            messageInput.appendQuotedText(`${message.selectedMessage}`);
         }
         messageInput.appendText('');
         messageInput.focus();
     });
-    replyButton.isAvailable = function() {
-        if (!replyButton.userId) {
+    replyButton.isAvailable = function(message) {
+        if (!message.userId) {
             return false;
         }
         return true;
@@ -53,11 +53,11 @@ import Util from './class/util.js';
     MessageMenu.append(quoteButton);
 
     const treatedClass = 'wamei-quote-icon-treated';
-    const target = document.querySelector('div#messages_container');
+    const target = document.querySelector('div.client_container');
     const observer = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
             $(mutation.target)
-                .find(`div.c-message blockquote b:not(.${treatedClass})`).each((i, elm) => {
+                .find(`div.c-message blockquote b:not(.${treatedClass}), .message_body .special_formatting_quote b:not(.${treatedClass})`).each((i, elm) => {
                     const $this = $(elm);
                     const name = $this.text();
                     $this.addClass(treatedClass);
@@ -80,12 +80,17 @@ import Util from './class/util.js';
         TS.client.ui.sendMessage = function(params, text) {
             let matched = text.match(/<.*\/archives\/.+\|Re:>/);
             if (matched) {
+                const thread = text.match(/thread_ts=([0-9]+\.[0-9]+)/);
                 TS.chat_history.add(text);
-                TS.interop.api.call('chat.postMessage', {
+                let message = {
                     channel: params.id,
                     unfurl_links: false,
                     text: text.replace(/<(@.+)\|@.+>/gm, '<$1>'),
-                }, (e, data) => {console.log(data);});
+                };
+                if (thread) {
+                    message['thread_ts'] = thread[1];
+                }
+                TS.interop.api.call('chat.postMessage', message, (e, data) => {console.log(data);});
                 return;
             }
             _old.apply(this, arguments);
