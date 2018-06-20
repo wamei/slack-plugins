@@ -77,10 +77,9 @@ import Util from './class/util.js';
 
     Util.executeOnLoad('TS.client.ui.sendMessage', () => {
         const _old = TS.client.ui.sendMessage;
-        TS.client.ui.sendMessage = function(params, text) {
+        TS.client.ui.sendMessage = function(params, text, thread) {
             let matched = text.match(/<.*\/archives\/.+\|Re:>/);
             if (matched) {
-                const thread = text.match(/thread_ts=([0-9]+\.[0-9]+)/);
                 TS.chat_history.add(text);
                 let message = {
                     channel: params.id,
@@ -88,7 +87,7 @@ import Util from './class/util.js';
                     text: text.replace(/<(@.+)\|@.+>/gm, '<$1>'),
                 };
                 if (thread) {
-                    message['thread_ts'] = thread[1];
+                    message['thread_ts'] = thread['thread_ts'];
                 }
                 TS.interop.api.call('chat.postMessage', message, (e, data) => {console.log(data);});
                 return;
