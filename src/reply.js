@@ -84,7 +84,7 @@ import Util from './class/util.js';
                 let message = {
                     channel: params.id,
                     unfurl_links: false,
-                    text: text.replace(/<(@.+)\|@.+>/gm, '<$1>'),
+                    text: text.replace(/<(@.+?)\|@.+?>/gm, '<$1>'),
                 };
                 if (thread) {
                     message['thread_ts'] = thread['thread_ts'];
