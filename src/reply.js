@@ -35,7 +35,8 @@ import Util from './class/util.js';
         if (messageInput.isEmpty()) {
             messageInput.clear();
         }
-        messageInput.appendText(`&lt;${location.origin}${message.messageUri}|Re:&gt;<span data-id="${message.userId}" data-label="@${user.display_name}" spellcheck="false" class="c-member_slug c-member_slug--link ts_tip_texty">@${user.display_name}</span>`);
+        const uri = message.messageUri.indexOf('/') == 0 ? location.origin + message.messageUri: message.messageUri;
+        messageInput.appendText(`&lt;${uri}|Re:&gt;<span data-id="${message.userId}" data-label="@${user.display_name}" spellcheck="false" class="c-member_slug c-member_slug--link ts_tip_texty">@${user.display_name}</span>`);
         if (message.selectedMessage != '') {
             messageInput.appendQuotedText(`${message.selectedMessage}`);
         }
