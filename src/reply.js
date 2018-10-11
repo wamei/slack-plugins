@@ -78,8 +78,8 @@ import Util from './class/util.js';
 
     Util.executeOnLoad('TS.client.ui.sendMessage', () => {
         const _old = TS.client.ui.sendMessage;
-        TS.client.ui.sendMessage = function(params, text, thread) {
-            let matched = text.match(/<.*\/archives\/.+\|Re:>/);
+        TS.client.ui.sendMessage = function(params, text, thread, reply_broadcast) {
+            let matched = text.match(/<.*(\/archives\/.+)\|Re:>/);
             if (matched) {
                 TS.chat_history.add(text);
                 let message = {
@@ -89,6 +89,16 @@ import Util from './class/util.js';
                 };
                 if (thread) {
                     message['thread_ts'] = thread['thread_ts'];
+                    message['reply_broadcast'] = reply_broadcast;
+                } else {
+                    let ts_candidate = matched[1].match(/\/archives\/.+\/p(\d+)(\?thread_ts=(\d+\.\d+))?.*/);
+                    if (ts_candidate[3]) {
+                        message['thread_ts'] = ts_candidate[3];
+                    } else {
+                        let ts = ts_candidate[1];
+                        message['thread_ts'] = `${ts.slice(0, ts.length - 6)}.${ts.slice(-6)}`;
+                    }
+                    message['reply_broadcast'] = true;
                 }
                 TS.interop.api.call('chat.postMessage', message, (e, data) => {console.log(data);});
                 return;
