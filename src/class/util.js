@@ -17,6 +17,17 @@ class Util {
         return message.closest('.c-virtual_list__item, ts-message').find('a.c-timestamp, a.timestamp').attr('href');
     }
 
+    getTSfromUri(uri) {
+        let ts_candidate = uri.match(/\/archives\/.+\/p(\d+)(\?thread_ts=(\d+\.\d+))?.*/);
+        if (ts_candidate[3]) {
+            return ts_candidate[3];
+        } else if (ts_candidate[1]) {
+            let ts = ts_candidate[1];
+            return `${ts.slice(0, ts.length - 6)}.${ts.slice(-6)}`;
+        }
+        return null;
+    }
+
     getUserByUserId(userId) {
         let users;
         if (userId.indexOf('B') == 0) {

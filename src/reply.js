@@ -42,6 +42,8 @@ import Util from './class/util.js';
         }
         messageInput.appendText('');
         messageInput.focus();
+
+        document.querySelector(`#reply_broadcast_toggle_${Util.getTSfromUri(uri).replace('.', '\\.')}_convo`).checked = true;
     });
     replyButton.isAvailable = function(message) {
         if (!message.userId) {
@@ -91,13 +93,7 @@ import Util from './class/util.js';
                     message['thread_ts'] = thread['thread_ts'];
                     message['reply_broadcast'] = reply_broadcast;
                 } else {
-                    let ts_candidate = matched[1].match(/\/archives\/.+\/p(\d+)(\?thread_ts=(\d+\.\d+))?.*/);
-                    if (ts_candidate[3]) {
-                        message['thread_ts'] = ts_candidate[3];
-                    } else {
-                        let ts = ts_candidate[1];
-                        message['thread_ts'] = `${ts.slice(0, ts.length - 6)}.${ts.slice(-6)}`;
-                    }
+                    message['thread_ts'] = Util.getTSfromUri(matched[1]);
                     message['reply_broadcast'] = true;
                 }
                 TS.interop.api.call('chat.postMessage', message, (e, data) => {console.log(data);});
