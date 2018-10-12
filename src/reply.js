@@ -78,6 +78,17 @@ import Util from './class/util.js';
     };
     observer.observe(target, config);
 
+    const targetContainer = document.querySelector('div#messages_container');
+    const observerContainer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            $('.c-message__broadcast_preamble').hide();
+        });
+    });;
+    observerContainer.observe(targetContainer, {
+        childList: true,
+        subtree: true,
+    });
+
     Util.executeOnLoad('TS.client.ui.sendMessage', () => {
         const _old = TS.client.ui.sendMessage;
         TS.client.ui.sendMessage = function(params, text, thread, reply_broadcast) {
