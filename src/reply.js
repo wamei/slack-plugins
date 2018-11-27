@@ -81,7 +81,8 @@ import Util from './class/util.js';
     const targetContainer = document.querySelector('div#messages_container');
     const observerContainer = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
-            $('.c-message__broadcast_preamble').hide();
+            $('.c-message__broadcast_preamble').css('font-size', '10px');
+            $('.c-message__broadcast_preamble_link').css('color', '#717274');
         });
     });;
     observerContainer.observe(targetContainer, {
