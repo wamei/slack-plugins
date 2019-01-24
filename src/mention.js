@@ -1,3 +1,5 @@
+import Util from './class/util.js';
+
 (function() {
     'use strict';
 
@@ -11,18 +13,19 @@
                   $(this).css('background-color', mentionColor);
               });
     };
-    const target = document.querySelector('div#messages_container');
-    const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-            const messages = $(mutation.target).find('div.c-message');
-            mention(messages.has('a[data-member-id="'+TS.model.user.id+'"]'));
-            mention(messages.has('span[data-broadcast-id="BKhere"]'));
-            mention(messages.has('span[data-broadcast-id="BKchannel"]'));
+    Util.executeOnLoad("document.querySelector('div#messages_container')", (target) => {
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                const messages = $(mutation.target).find('div.c-message');
+                mention(messages.has('a[data-member-id="'+TS.model.user.id+'"]'));
+                mention(messages.has('span[data-broadcast-id="BKhere"]'));
+                mention(messages.has('span[data-broadcast-id="BKchannel"]'));
+            });
         });
+        const config = {
+            childList: true,
+            subtree: true,
+        };
+        observer.observe(target, config);
     });
-    const config = {
-        childList: true,
-        subtree: true,
-    };
-    observer.observe(target, config);
 })();

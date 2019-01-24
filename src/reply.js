@@ -56,38 +56,40 @@ import Util from './class/util.js';
     MessageMenu.append(quoteButton);
 
     const treatedClass = 'wamei-quote-icon-treated';
-    const target = document.querySelector('div.client_container');
-    const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-            $(mutation.target)
-                .find(`div.c-message blockquote b:not(.${treatedClass}), .message_body .special_formatting_quote b:not(.${treatedClass})`).each((i, elm) => {
-                    const $this = $(elm);
-                    const name = $this.text();
-                    $this.addClass(treatedClass);
-                    const user = Util.getUserByName(name);
-                    if (!user) {
-                        return;
-                    }
-                    $this.html(`<img class="c-message_attachment__author_icon" alt="${user.display_name}" src="${user.avatar_icon}" width="16" height="16">${user.display_name}`);
-                });
+    Util.executeOnLoad("document.querySelector('div.client_container')", (target) => {
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                $(mutation.target)
+                    .find(`div.c-message blockquote b:not(.${treatedClass}), .message_body .special_formatting_quote b:not(.${treatedClass})`).each((i, elm) => {
+                        const $this = $(elm);
+                        const name = $this.text();
+                        $this.addClass(treatedClass);
+                        const user = Util.getUserByName(name);
+                        if (!user) {
+                            return;
+                        }
+                        $this.html(`<img class="c-message_attachment__author_icon" alt="${user.display_name}" src="${user.avatar_icon}" width="16" height="16">${user.display_name}`);
+                    });
+            });
         });
+        const config = {
+            childList: true,
+            subtree: true,
+        };
+        observer.observe(target, config);
     });
-    const config = {
-        childList: true,
-        subtree: true,
-    };
-    observer.observe(target, config);
 
-    const targetContainer = document.querySelector('div#messages_container');
-    const observerContainer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-            $('.c-message__broadcast_preamble').css('font-size', '10px');
-            $('.c-message__broadcast_preamble_link').css('color', '#717274');
+    Util.executeOnLoad("document.querySelector('div#messages_container')", (target) => {
+        const observerContainer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                $('.c-message__broadcast_preamble').css('font-size', '10px');
+                $('.c-message__broadcast_preamble_link').css('color', '#717274');
+            });
+        });;
+        observerContainer.observe(target, {
+            childList: true,
+            subtree: true,
         });
-    });;
-    observerContainer.observe(targetContainer, {
-        childList: true,
-        subtree: true,
     });
 
     Util.executeOnLoad('TS.client.ui.sendMessage', () => {

@@ -15,26 +15,28 @@ class MessageMenu {
     }
 
     mount() {
-        const mainTarget = document.querySelector('div#messages_container');
-        this.mainObserver = new MutationObserver((mutations) => {
-            mutations.forEach((mutation) => {
-                this.applyButtons($(mutation.target).find('div.c-message_actions__container'), '#msg_input');
+        Util.executeOnLoad("document.querySelector('div#messages_container')", (target) => {
+            this.mainObserver = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    this.applyButtons($(mutation.target).find('div.c-message_actions__container'), '#msg_input');
+                });
+            });
+            this.mainObserver.observe(target, {
+                childList: true,
+                subtree: true,
             });
         });
-        this.mainObserver.observe(mainTarget, {
-            childList: true,
-            subtree: true,
-        });
-        const threadTarget = document.querySelector('div#convo_scroller');
-        this.threadObserver = new MutationObserver((mutations) => {
-            mutations.forEach((mutation) => {
-                this.applyButtons($(mutation.target).closest('div.action_hover_container'), 'div#convo_scroller .message_input');
+        Util.executeOnLoad("document.querySelector('div#convo_scroller')", (target) => {
+            this.threadObserver = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    this.applyButtons($(mutation.target).closest('div.action_hover_container'), 'div#convo_scroller .message_input');
+                });
             });
-        });
-        this.threadObserver.observe(threadTarget, {
-            childList: true,
-            attributes: true,
-            subtree: true,
+            this.threadObserver.observe(target, {
+                childList: true,
+                attributes: true,
+                subtree: true,
+            });
         });
         return this;
     }

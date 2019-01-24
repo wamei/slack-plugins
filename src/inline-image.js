@@ -37,22 +37,24 @@ import Util from './class/util.js';
             });
     };
 
-    const mainTarget = document.querySelector('div#messages_container');
-    const mainObserver = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-            expandImage($(mutation.target).find('div.c-message'));
-        });
-    });
-    const threadTarget = document.querySelector('div#convo_scroller');
-    const threadObserver = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-            expandImage($(mutation.target).find('ts-message'));
-        });
-    });
     const config = {
         childList: true,
         subtree: true,
     };
-    mainObserver.observe(mainTarget, config);
-    threadObserver.observe(threadTarget, config);
+    Util.executeOnLoad("document.querySelector('div#messages_container')", (target) => {
+        const mainObserver = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                expandImage($(mutation.target).find('div.c-message'));
+            });
+        });
+        mainObserver.observe(target, config);
+    });
+    Util.executeOnLoad("document.querySelector('div#convo_scroller')", (target) => {
+        const threadObserver = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                expandImage($(mutation.target).find('ts-message'));
+            });
+        });
+        threadObserver.observe(target, config);
+    });
 })();
