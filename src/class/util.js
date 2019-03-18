@@ -90,6 +90,25 @@ class Util {
         });
     }
 
+    onElementInserted(selector, callback) {
+        if (!this.elementInsertedSelector) {
+            this.elementInsertedSelector = {};
+            $('head').append(`<style>@-webkit-keyframes elementInserted { 0% {opacity: 0;} 100% {opacity: 1;} }</style>`);
+        }
+        if (!this.elementInsertedSelector[selector]) {
+            this.elementInsertedSelector[selector] = [];
+            $('head').append(`<style>${selector} { -webkit-animation: elementInserted 0.001s 1; }</style>`);
+            document.addEventListener('webkitAnimationStart', (event) => {
+                if (event.animationName == 'elementInserted') {
+                    this.elementInsertedSelector[selector].forEach((callback) => {
+                        callback(event);
+                    });
+                }
+            });
+        }
+        this.elementInsertedSelector[selector].push(callback);
+    }
+
     get settings() {
         return {
             set(key, value) {

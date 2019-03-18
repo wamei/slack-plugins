@@ -54,26 +54,19 @@ import Util from './class/util.js';
     MessageMenu.append(quoteButton);
 
     const treatedClass = 'wamei-quote-icon-treated';
-    Util.executeOnLoad("document.querySelector('div#messages_container')", (target) => {
-        const observerContainer = new MutationObserver((mutations) => {
-            mutations.forEach((mutation) => {
-                $('.c-message__broadcast_preamble').css('font-size', '10px');
-                $('.c-message__broadcast_preamble_link').css('color', '#717274');
-                $(`.c-message blockquote b:not(.${treatedClass}), .message_body .special_formatting_quote b:not(.${treatedClass})`).each((i, elm) => {
-                        const $this = $(elm);
-                        const name = $this.text();
-                        $this.addClass(treatedClass);
-                        const user = Util.getUserByName(name);
-                        if (!user) {
-                            return;
-                        }
-                        $this.html(`<img class="c-message_attachment__author_icon" alt="${user.display_name}" src="${user.avatar_icon}" width="16" height="16">${user.display_name}`);
-                    });
-            });
-        });
-        observerContainer.observe(target, {
-            childList: true,
-            subtree: true,
+    Util.onElementInserted('.c-message, .c-message_kit__message', (event) => {
+        const message = $(event.target);
+        message.find('.c-message__broadcast_preamble').css('font-size', '10px');
+        message.find('.c-message__broadcast_preamble_link').css('color', '#717274');
+        message.find(`blockquote b:not(.${treatedClass}), .special_formatting_quote b:not(.${treatedClass})`).each((i, elm) => {
+            const $this = $(elm);
+            const name = $this.text();
+            $this.addClass(treatedClass);
+            const user = Util.getUserByName(name);
+            if (!user) {
+                return;
+            }
+            $this.html(`<img class="c-message_attachment__author_icon" alt="${user.display_name}" src="${user.avatar_icon}" width="16" height="16">${user.display_name}`);
         });
     });
 

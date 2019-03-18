@@ -37,24 +37,8 @@ import Util from './class/util.js';
             });
     };
 
-    const config = {
-        childList: true,
-        subtree: true,
-    };
-    Util.executeOnLoad("document.querySelector('div#messages_container')", (target) => {
-        const mainObserver = new MutationObserver((mutations) => {
-            mutations.forEach((mutation) => {
-                expandImage($(mutation.target).find('div.c-message'));
-            });
-        });
-        mainObserver.observe(target, config);
-    });
-    Util.executeOnLoad("document.querySelector('div#convo_tab')", (target) => {
-        const threadObserver = new MutationObserver((mutations) => {
-            mutations.forEach((mutation) => {
-                expandImage($(mutation.target).find('div.c-message_kit__message'));
-            });
-        });
-        threadObserver.observe(target, config);
+    Util.onElementInserted('.c-message, .c-message_kit__message', (event) => {
+        const message = $(event.target);
+        expandImage(message);
     });
 })();

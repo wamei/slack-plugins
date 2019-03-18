@@ -13,19 +13,10 @@ import Util from './class/util.js';
                   $(this).css('background-color', mentionColor);
               });
     };
-    Util.executeOnLoad("document.querySelector('div#messages_container')", (target) => {
-        const observer = new MutationObserver((mutations) => {
-            mutations.forEach((mutation) => {
-                const messages = $(mutation.target).find('div.c-message');
-                mention(messages.has('a[data-member-id="'+TS.model.user.id+'"]'));
-                mention(messages.has('span[data-broadcast-id="BKhere"]'));
-                mention(messages.has('span[data-broadcast-id="BKchannel"]'));
-            });
-        });
-        const config = {
-            childList: true,
-            subtree: true,
-        };
-        observer.observe(target, config);
+    Util.onElementInserted('.c-message, .c-message_kit__message', (event) => {
+        const message = $(event.target);
+        mention(message.has('a[data-member-id="'+TS.model.user.id+'"]'));
+        mention(message.has('span[data-broadcast-id="BKhere"]'));
+        mention(message.has('span[data-broadcast-id="BKchannel"]'));
     });
 })();
