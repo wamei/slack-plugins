@@ -49,10 +49,10 @@ import Util from './class/util.js';
         });
         mainObserver.observe(target, config);
     });
-    Util.executeOnLoad("document.querySelector('div#convo_scroller')", (target) => {
+    Util.executeOnLoad("document.querySelector('div#convo_tab')", (target) => {
         const threadObserver = new MutationObserver((mutations) => {
             mutations.forEach((mutation) => {
-                expandImage($(mutation.target).find('ts-message'));
+                expandImage($(mutation.target).find('div.c-message_kit__message'));
             });
         });
         threadObserver.observe(target, config);
