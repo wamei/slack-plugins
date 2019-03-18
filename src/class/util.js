@@ -3,7 +3,7 @@ class Util {
     getUserIdFromMessage(message) {
         message = message.closest('.c-virtual_list__item, ts-message');
         while(true) {
-            let userId = message.find('.c-message__gutter a.c-avatar, a.message_sender').attr('href');
+            let userId = message.find('.c-message__gutter a.c-avatar, a.c-message_kit__avatar, a.member_image').attr('href');
             if (userId) {
                 return userId.split('/')[2];
             }
@@ -15,6 +15,10 @@ class Util {
     }
     getMessageUriFromMessage(message) {
         return message.closest('.c-virtual_list__item, ts-message').find('a.c-timestamp, a.timestamp').attr('href');
+    }
+
+    createMessageLink(url, userId, userName) {
+        return `&lt;${url}|Re:&gt; <span data-id="${userId}" data-label="@${userName}" spellcheck="false" class="c-member_slug c-member_slug--link ts_tip_texty">@${userName}</span>`;
     }
 
     getTSfromUri(uri) {
@@ -76,6 +80,15 @@ class Util {
         };
         checker();
     };
+
+    delegate(element, event, selector, callback) {
+        element.addEventListener(event, (e) => {
+            const target = e.target.closest(selector);
+            if (target) {
+                callback(e, target);
+            }
+        });
+    }
 
     get settings() {
         return {

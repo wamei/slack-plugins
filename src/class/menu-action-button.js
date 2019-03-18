@@ -13,7 +13,7 @@ export default class MenuActionButton {
     }
 
     createElement(message) {
-        const $element = $(`<button class="btn_msg_action c-button-unstyled c-message_actions__button ${this.label}" type="button" aria-haspopup="true" aria-label="${this.label}"><i class="c-icon ${this.iconClass}" aria-hidden="true"></i></button>`)
+        const $element = $(`<button class="wamei-added btn_msg_action c-button-unstyled c-message_actions__button ${this.label}" type="button" aria-haspopup="true" aria-label="${this.label}"><i class="c-icon ${this.iconClass}" aria-hidden="true"></i></button>`)
             .click(() => { this.callback(message); })
             .hover(() => {
                 const offset = $element.offset();

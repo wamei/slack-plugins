@@ -1,10 +1,10 @@
 export default class MessageInput {
-    constructor(selector) {
-        this.selector = selector;
+    constructor(target) {
+        this.target = target;
     }
 
     get $input() {
-        return $(this.selector).find('.ql-editor');
+        return $(this.target).find('.ql-editor');
     }
 
     focus() {

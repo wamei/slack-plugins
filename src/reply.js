@@ -7,7 +7,7 @@ import Util from './class/util.js';
     'use strict';
 
     const quoteButton = new MenuActionButton('メッセージを引用する', 'ts_icon_quote', function(message) {
-        const messageInput = new MessageInput(message.selectorInput);
+        const messageInput = new MessageInput(message.relatedInput);
         if (messageInput.isEmpty()) {
             messageInput.clear();
         }
@@ -27,7 +27,7 @@ import Util from './class/util.js';
     });
 
     const replyButton = new MenuActionButton('メッセージに返信する', 'c-icon--share-action" style="transform: scale(-1, 1);"', function(message) {
-        const messageInput = new MessageInput(message.selectorInput);
+        const messageInput = new MessageInput(message.relatedInput);
         const user = Util.getUserByUserId(message.userId);
         if (!user) {
             return;
@@ -36,14 +36,12 @@ import Util from './class/util.js';
             messageInput.clear();
         }
         const uri = message.messageUri.indexOf('/') == 0 ? location.origin + message.messageUri: message.messageUri;
-        messageInput.appendText(`&lt;${uri}|Re:&gt;<span data-id="${message.userId}" data-label="@${user.display_name}" spellcheck="false" class="c-member_slug c-member_slug--link ts_tip_texty">@${user.display_name}</span>`);
+        messageInput.appendText(Util.createMessageLink(uri, message.userId, user.display_name));
         if (message.selectedMessage != '') {
             messageInput.appendQuotedText(`${message.selectedMessage}`);
         }
         messageInput.appendText('');
         messageInput.focus();
-
-        document.querySelector(`#reply_broadcast_toggle_${Util.getTSfromUri(uri).replace('.', '\\.')}_convo`).checked = true;
     });
     replyButton.isAvailable = function(message) {
         if (!message.userId) {
@@ -56,11 +54,12 @@ import Util from './class/util.js';
     MessageMenu.append(quoteButton);
 
     const treatedClass = 'wamei-quote-icon-treated';
-    Util.executeOnLoad("document.querySelector('div.client_container')", (target) => {
-        const observer = new MutationObserver((mutations) => {
+    Util.executeOnLoad("document.querySelector('div#messages_container')", (target) => {
+        const observerContainer = new MutationObserver((mutations) => {
             mutations.forEach((mutation) => {
-                $(mutation.target)
-                    .find(`div.c-message blockquote b:not(.${treatedClass}), .message_body .special_formatting_quote b:not(.${treatedClass})`).each((i, elm) => {
+                $('.c-message__broadcast_preamble').css('font-size', '10px');
+                $('.c-message__broadcast_preamble_link').css('color', '#717274');
+                $(`.c-message blockquote b:not(.${treatedClass}), .message_body .special_formatting_quote b:not(.${treatedClass})`).each((i, elm) => {
                         const $this = $(elm);
                         const name = $this.text();
                         $this.addClass(treatedClass);
@@ -72,48 +71,38 @@ import Util from './class/util.js';
                     });
             });
         });
-        const config = {
-            childList: true,
-            subtree: true,
-        };
-        observer.observe(target, config);
-    });
-
-    Util.executeOnLoad("document.querySelector('div#messages_container')", (target) => {
-        const observerContainer = new MutationObserver((mutations) => {
-            mutations.forEach((mutation) => {
-                $('.c-message__broadcast_preamble').css('font-size', '10px');
-                $('.c-message__broadcast_preamble_link').css('color', '#717274');
-            });
-        });;
         observerContainer.observe(target, {
             childList: true,
             subtree: true,
         });
     });
 
-    Util.executeOnLoad('TS.client.ui.sendMessage', () => {
-        const _old = TS.client.ui.sendMessage;
-        TS.client.ui.sendMessage = function(params, text, thread, reply_broadcast) {
-            let matched = text.match(/<.*(\/archives\/.+)\|Re:>/);
-            if (matched) {
-                TS.chat_history.add(text);
-                let message = {
-                    channel: params.id,
-                    unfurl_links: false,
-                    text: text.replace(/<(@.+?)\|@.+?>/gm, '<$1>'),
+    Util.executeOnLoad('XMLHttpRequest.prototype.open', () => {
+        const oldOpen = XMLHttpRequest.prototype.open;
+        const oldSend = XMLHttpRequest.prototype.send;
+        XMLHttpRequest.prototype.open = function(method, url) {
+            if (url.startsWith('/api/chat.postMessage')) {
+                this.send = function(formData) {
+                    if (formData.get('type') != 'message') {
+                        return oldSend.call(this, formData);
+                    }
+                    const text = formData.get('text');
+                    const regExp = /&lt;(.*(\/archives\/.+)\|Re:)&gt;/;
+                    let matched = text.match(regExp);
+                    if (matched) {
+                        const threadTs = formData.get('thread_ts');
+                        if (!threadTs) {
+                            formData.append('thread_ts', Util.getTSfromUri(matched[2]));
+                            formData.append('reply_broadcast', 'true');
+                        }
+                        formData.delete('text');
+                        formData.append('text', text.replace(regExp, '<$1>'));
+                        formData.append('unfurl_links', 'false');
+                    }
+                    return oldSend.call(this, formData);
                 };
-                if (thread) {
-                    message['thread_ts'] = thread['thread_ts'];
-                    message['reply_broadcast'] = reply_broadcast;
-                } else {
-                    message['thread_ts'] = Util.getTSfromUri(matched[1]);
-                    message['reply_broadcast'] = true;
-                }
-                TS.interop.api.call('chat.postMessage', message, (e, data) => {console.log(data);});
-                return;
             }
-            _old.apply(this, arguments);
+            return oldOpen.apply(this, arguments);
         };
     });
 })();
