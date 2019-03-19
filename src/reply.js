@@ -80,8 +80,8 @@ import Util from './class/util.js';
                         return oldSend.call(this, formData);
                     }
                     const text = formData.get('text');
-                    const regExp = /&lt;(.*(\/archives\/.+)\|Re:)&gt;/;
-                    let matched = text.match(regExp);
+                    const regExpString = '&lt;(.*(\/archives\/.+)\|Re:)&gt;';
+                    let matched = text.match(new RegExp(regExpString));
                     if (matched) {
                         const threadTs = formData.get('thread_ts');
                         if (!threadTs) {
@@ -89,7 +89,7 @@ import Util from './class/util.js';
                             formData.append('reply_broadcast', 'true');
                         }
                         formData.delete('text');
-                        formData.append('text', text.replace(regExp, '<$1>'));
+                        formData.append('text', text.replace(new RegExp(regExpString, 'gm'), '<$1>'));
                         formData.append('unfurl_links', 'false');
                     }
                     return oldSend.call(this, formData);
