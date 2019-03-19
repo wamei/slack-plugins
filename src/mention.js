@@ -16,7 +16,7 @@ import Util from './class/util.js';
     Util.onElementInserted('.c-message, .c-message_kit__message, ts-message', (event) => {
         const message = $(event.target);
         mention(message.has('a[data-member-id="'+TS.model.user.id+'"]'));
-        mention(message.has('span[data-broadcast-id="BKhere"]'));
-        mention(message.has('span[data-broadcast-id="BKchannel"]'));
+        mention(message.has('.c-message__body span[data-broadcast-id="BKhere"], .c-message_kit__text span[data-broadcast-id="BKhere"]'));
+        mention(message.has('.c-message__body span[data-broadcast-id="BKchannel"], .c-message_kit__text span[data-broadcast-id="BKchannel"]'));
     });
 })();
