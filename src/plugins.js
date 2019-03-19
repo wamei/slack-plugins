@@ -2,7 +2,7 @@
     'use strict';
 
     const inject = (src) => {
-        $('body').prepend(`<script src="${src}">`);
+        $('body').not(`:has(script[src="${src}"])`).prepend(`<script src="${src}">`);
     };
 
     inject("https://wamei.github.io/slack-plugins/dist/inline-image.js");
