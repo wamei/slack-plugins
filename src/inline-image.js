@@ -37,7 +37,7 @@ import Util from './class/util.js';
             });
     };
 
-    Util.onElementInserted('.c-message, .c-message_kit__message', (event) => {
+    Util.onElementInserted('.c-message, .c-message_kit__message, ts-message', (event) => {
         const message = $(event.target);
         expandImage(message);
     });

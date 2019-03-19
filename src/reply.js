@@ -54,7 +54,7 @@ import Util from './class/util.js';
     MessageMenu.append(quoteButton);
 
     const treatedClass = 'wamei-quote-icon-treated';
-    Util.onElementInserted('.c-message, .c-message_kit__message', (event) => {
+    Util.onElementInserted('.c-message, .c-message_kit__message, ts-message', (event) => {
         const message = $(event.target);
         message.find('.c-message__broadcast_preamble').css('font-size', '10px');
         message.find('.c-message__broadcast_preamble_link').css('color', '#717274');
