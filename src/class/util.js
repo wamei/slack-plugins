@@ -70,6 +70,19 @@ class Util {
         return user;
     }
 
+    getChannel(cid) {
+        switch(cid.charAt(0)) {
+        case 'C':
+            return TS.model.channels.find((c) => c.id == cid);
+        case 'G':
+            return TS.model.groups.find((c) => c.id == cid);
+        case 'D':
+            return TS.model.ims.find((c) => c.id == cid);
+        default:
+            return null;
+        }
+    };
+
     executeOnLoad(target, callback) {
         const checker = () => {
             let loaded = eval(target);

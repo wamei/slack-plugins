@@ -15,17 +15,10 @@ import MessageInput from './class/message-input.js';
                             Util.executeOnLoad('$(\'.ReactModal__Content[aria-label="検索"]\').length', () => {
                                 const cid = TS.model.active_cid;
                                 let target = '';
-                                switch(cid.charAt(0)) {
-                                case 'C':
-                                    target = `#${TS.model.channels.filter((c) => c.id == cid)[0].name}`;
-                                    break;
-                                case 'G':
-                                    target = `#${TS.model.groups.filter((c) => c.id == cid)[0].name}`;
-                                    break;
-                                case 'D':
-                                    target = `@${TS.model.ims.filter((c) => c.id == cid)[0].name}`;
-                                    break;
-                                default:
+                                const channel = Util.getChannel(cid);
+                                if (channel) {
+                                    target = `#${channel.name}`;
+                                } else {
                                     messageInput.focus();
                                     return;
                                 }

@@ -1,3 +1,6 @@
+import Util from './class/util.js';
+import axios from 'axios';
+
 var updateBadge = function() {
     var unread = TS.model.all_unread_cnt;
     if (unread > 0) {
@@ -10,33 +13,33 @@ setInterval(updateBadge, 1000);
 
 var mention_cnt = TS.model.all_unread_highlights_cnt;
 
-var connect = function() {
-    TS.interop.api.call('rtm.connect', {})
-        .then(function(ret) {
-            var con = new WebSocket(ret.data.url);
-            con.onopen = function() {
-                con.send('Ping');
-            };
-            con.onerror = function(error) {
-                console.error(error);
-                connect();
-            };
-            con.onmessage = function(ret) {
-                var new_mention_cnt = TS.model.all_unread_highlights_cnt;
-                if (new_mention_cnt > mention_cnt) {
-                    window.fluid.requestUserAttention(true);
-                }
-                mention_cnt = new_mention_cnt;
-            };
-        }).catch(function (error) {
-            console.error(error);
-        });
+var connect = async function() {
+    const response = await axios.get(`https://${window.location.host}/api/rtm.connect`, {
+        headers: {
+            'content_type': 'application/x-www-form-urlencoded',
+            'Authorization': `Bearer ${TS.model.api_token}`,
+        },
+    });
+    var con = new WebSocket(response.data.url);
+    con.onopen = function(event) {
+        console.log(event);
+    };
+    con.onerror = function(error) {
+        console.error(error);
+    };
+    con.onclose = function(event) {
+        console.error(event);
+        connect();
+    };
+    con.onmessage = function(event) {
+        var new_mention_cnt = TS.model.all_unread_highlights_cnt;
+        if (new_mention_cnt > mention_cnt) {
+            window.fluid.requestUserAttention(true);
+        }
+        mention_cnt = new_mention_cnt;
+    };
 };
 
-(function(target, func) {
-     if (!eval(target)) {
-         this.call(this, target, func);
-         return;
-     }
-     func();
- })('TS.interop.api.call', connect);
+Util.executeOnLoad('TS.model.api_token', () => {
+    connect();
+});
