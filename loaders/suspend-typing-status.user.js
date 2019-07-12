@@ -1,18 +1,10 @@
 // ==UserScript==
-// @name         Wamei Slack Suspend Typing Status Plugin
+// @name         wamei-suspend-typing-status
 // @namespace    wamei
 // @version      0.1
-// @description  打鍵中のステータスを表示させない
 // @author       wamei
 // @match        https://*.slack.com/*
+// @require https://code.jquery.com/jquery-3.4.1.min.js
 // ==/UserScript==
 
-(function() {
-    'use strict';
-
-    const inject = (src) => {
-        $('body').not(`:has(script[src="${src}"])`).prepend(`<script src="${src}">`);
-    };
-
-    inject("https://wamei.github.io/slack-plugins/dist/suspend-typing-status.js");
-})();
+!function(e){var t={};function r(n){if(t[n])return t[n].exports;var a=t[n]={i:n,l:!1,exports:{}};return e[n].call(a.exports,a,a.exports,r),a.l=!0,a.exports}r.m=e,r.c=t,r.d=function(e,t,n){r.o(e,t)||Object.defineProperty(e,t,{enumerable:!0,get:n})},r.r=function(e){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},r.t=function(e,t){if(1&t&&(e=r(e)),8&t)return e;if(4&t&&"object"==typeof e&&e&&e.__esModule)return e;var n=Object.create(null);if(r.r(n),Object.defineProperty(n,"default",{enumerable:!0,value:e}),2&t&&"string"!=typeof e)for(var a in e)r.d(n,a,function(t){return e[t]}.bind(null,a));return n},r.n=function(e){var t=e&&e.__esModule?function(){return e.default}:function(){return e};return r.d(t,"a",t),t},r.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},r.p="",r(r.s=4)}([function(module,__webpack_exports__,__webpack_require__){"use strict";const PREFIX="wamei:";class Util{getUserIdFromMessage(e){for(e=e.closest(".c-virtual_list__item, ts-message");;){let t=e.find(".c-message__gutter a.c-avatar, a.c-message_kit__avatar, a.member_image").attr("href");if(t)return t.split("/")[2];if(0==(e=e.prev()).length)return null}}getMessageUriFromMessage(e){return e.closest(".c-virtual_list__item, ts-message").find("a.c-timestamp, a.timestamp").attr("href")}createMessageLink(e,t,r){return`&lt;${e}|Re:&gt; <span data-id="${t}" data-label="@${r}" spellcheck="false" class="c-member_slug c-member_slug--link ts_tip_texty">@${r}</span>`}getTSfromUri(e){let t=e.match(/\/archives\/.+\/p(\d+)(\?thread_ts=(\d+\.\d+))?.*/);if(t[3])return t[3];if(t[1]){let e=t[1];return`${e.slice(0,e.length-6)}.${e.slice(-6)}`}return null}getUserByUserId(e){let t,r=(t=0==e.indexOf("B")?TS.model.bots:TS.model.members).filter(t=>t.id==e);return 0==r.length?null:((r=r[0]).is_bot=!(!1===r.is_bot),r.display_name=r._display_name_normalized_lc||r._real_name_normalized_lc||r.name,r.avatar_icon=r.is_bot?r.icons.image_36:r.profile.image_24,r)}getUserByName(e){let t;return 0==(t=TS.model.members.filter(t=>t._display_name_normalized_lc==e||t._real_name_normalized_lc==e)).length&&(t=TS.model.bots.filter(t=>t.name==e)),0==t.length?null:((t=t[0]).is_bot=!(!1===t.is_bot),t.display_name=t._display_name_normalized_lc||t._real_name_normalized_lc||t.name,t.avatar_icon=t.is_bot?t.icons.image_36:t.profile.image_24,t)}executeOnLoad(target,callback){const checker=()=>{let loaded=eval(target);return loaded?callback(loaded):setTimeout(checker,1)};checker()}delegate(e,t,r,n){e.addEventListener(t,e=>{const t=e.target.closest(r);t&&n(e,t)})}onElementInserted(e,t){this.elementInsertedSelector||(this.elementInsertedSelector={},$("head").append("<style>@-webkit-keyframes elementInserted { 0% {opacity: 0;} 100% {opacity: 1;} }</style>")),this.elementInsertedSelector[e]||(this.elementInsertedSelector[e]=[],$("head").append(`<style>${e} { -webkit-animation: elementInserted 0.001s 1; }</style>`),document.addEventListener("webkitAnimationStart",t=>{"elementInserted"==t.animationName&&this.elementInsertedSelector[e].forEach(e=>{e(t)})})),this.elementInsertedSelector[e].push(t)}get settings(){return{set(e,t){try{localStorage.setItem(PREFIX+e,JSON.stringify(t))}catch(e){}},get(e){try{const t=localStorage.getItem(PREFIX+e);return null==t?null:JSON.parse(t)}catch(e){return null}}}}}const util=new Util;__webpack_exports__.a=util},,,,function(e,t,r){"use strict";r.r(t),r(0).a.executeOnLoad("window.WebSocket.prototype.send",()=>{const e=window.WebSocket.prototype.send;window.WebSocket.prototype.send=function(t){let r=JSON.parse(t);r&&r.type&&"typing"==r.type||e.call(this,t)}})}]);
