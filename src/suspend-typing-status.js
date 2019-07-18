@@ -3,7 +3,9 @@ import Util from './class/util.js';
 (function() {
     'use strict';
 
-    Util.executeOnLoad('window.WebSocket.prototype.send', () => {
+    Util.executeOnLoad(() => {
+        return window.WebSocket && window.WebSocket.prototype.send;
+    }, () => {
         const _send = window.WebSocket.prototype.send;
         window.WebSocket.prototype.send = function(data) {
             let params = JSON.parse(data);

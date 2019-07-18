@@ -4,7 +4,7 @@ import MessageFontSizeStyle from './class/message-font-size-style.js';
     'use strict';
 
     const style = new MessageFontSizeStyle();
-    $(document).on('keyup', function(e) {
+    document.body.addEventListener('keyup', (e) => {
         if (!e.altKey) {
             return;
         }

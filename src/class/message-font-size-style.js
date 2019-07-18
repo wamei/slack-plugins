@@ -1,12 +1,14 @@
+import Util from './util.js';
 import Style from './style.js';
+
+const KEY = 'font-size';
 
 export default class MessageFontSizeStyle extends Style {
     constructor() {
         super();
-        this.storageKey = 'wsp-font-size';
         this.defaultSize = 14;
         this.minSize = 8;
-        this.fontSize = localStorage.getItem(this.storageKey) - 0 || this.defaultSize;
+        this.fontSize = Util.settings.set(KEY) - 0 || this.defaultSize;
         this.set();
     }
 
@@ -36,6 +38,6 @@ export default class MessageFontSizeStyle extends Style {
     }
 
     save() {
-        localStorage.setItem(this.storageKey, this.fontSize);
+        Util.settings.set(KEY, this.fontSize);
     }
 }

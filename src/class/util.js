@@ -30,6 +30,17 @@ class Util {
         this.elementInsertedSelector[selector].push(callback);
     }
 
+    executeOnLoad(target, callback) {
+        const checker = () => {
+            let loaded = target();
+            if (!loaded) {
+                return setTimeout(checker, 1);
+            }
+            return callback(loaded);
+        };
+        checker();
+    };
+
     getUserFromMessageElement(message) {
         message = message.closest('.c-virtual_list__item, ts-message');
         while(true) {
@@ -45,6 +56,28 @@ class Util {
                 return new User(null, null, null);
             }
         }
+    }
+
+    get settings() {
+        return {
+            set(key, value) {
+                try {
+                    localStorage.setItem(PREFIX + key, JSON.stringify(value));
+                } catch(e) {
+                }
+            },
+            get(key) {
+                try {
+                    const item = localStorage.getItem(PREFIX + key);
+                    if (item == null) {
+                        return null;
+                    }
+                    return JSON.parse(item);
+                } catch(e) {
+                    return null;
+                }
+            }
+        };
     }
 
     //------------------------------------------------------------------
@@ -119,17 +152,6 @@ class Util {
         return user;
     }
 
-    executeOnLoad(target, callback) {
-        const checker = () => {
-            let loaded = eval(target);
-            if (!loaded) {
-                return setTimeout(checker, 1);
-            }
-            return callback(loaded);
-        };
-        checker();
-    };
-
     delegate(element, event, selector, callback) {
         element.addEventListener(event, (e) => {
             const target = e.target.closest(selector);
@@ -137,28 +159,6 @@ class Util {
                 callback(e, target);
             }
         });
-    }
-
-    get settings() {
-        return {
-            set(key, value) {
-                try {
-                    localStorage.setItem(PREFIX + key, JSON.stringify(value));
-                } catch(e) {
-                }
-            },
-            get(key) {
-                try {
-                    const item = localStorage.getItem(PREFIX + key);
-                    if (item == null) {
-                        return null;
-                    }
-                    return JSON.parse(item);
-                } catch(e) {
-                    return null;
-                }
-            }
-        };
     }
 }
 const util = new Util();
