@@ -5,24 +5,21 @@ import Util from './class/util.js';
 
     const mentionColor = '#ddebd7';
     const mentionHoverColor = '#e7efe4';
-    const mention = ($target) => {
-        $target.css('background-color', mentionColor)
-              .hover(function() {
-                  $(this).css('background-color', mentionHoverColor);
-              }, function() {
-                  $(this).css('background-color', mentionColor);
-              });
+    const mention = (message, target) => {
+        if (!message.querySelector(target)) {
+            return;
+        }
+        message.style.backgroundColor = mentionColor;
+        message.addEventListener('mouseover', () => {
+            message.style.backgroundColor = mentionHoverColor;
+        });
+        message.addEventListener('mouseout', () => {
+            message.style.backgroundColor = mentionColor;
+        });
     };
-    Util.onElementInserted('.c-message, .c-message_kit__message, ts-message', (event) => {
-        const message = $(event.target);
-        mention(message.has('.message_body a[data-member-id="'+TS.model.user.id+'"]'));
-        mention(message.has('.c-message__body a[data-member-id="'+TS.model.user.id+'"]'));
-        mention(message.has('.c-message_kit__text a[data-member-id="'+TS.model.user.id+'"]'));
-        mention(message.has('.message_body span[data-broadcast-id="BKhere"]'));
-        mention(message.has('.c-message__body span[data-broadcast-id="BKhere"]'));
-        mention(message.has('.c-message_kit__text span[data-broadcast-id="BKhere"]'));
-        mention(message.has('.message_body span[data-broadcast-id="BKchannel"]'));
-        mention(message.has('.c-message__body span[data-broadcast-id="BKchannel"]'));
-        mention(message.has('.c-message_kit__text span[data-broadcast-id="BKchannel"]'));
+    Util.onElementInserted('.c-message, .c-message_kit__message, ts-message', (target) => {
+        mention(target, 'a.c-member_slug--mention');
+        mention(target, 'span[data-broadcast-id="BKhere"]');
+        mention(target, 'span[data-broadcast-id="BKchannel"]');
     });
 })();

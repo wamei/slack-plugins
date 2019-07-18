@@ -1,62 +1,54 @@
-export default class MenuActionButton {
+export default class ModalImage {
     constructor(url, user) {
         this.url = url;
         this.user = user;
-
-        this.initElement();
     }
 
-    initElement() {
-        this.$element = $(`
-<div id="fs_modal" role="dialog" tabindex="-1" class="fs_modal_file_viewer active" aria-labelledby="fs_modal_header" style="transition: 200ms;">
-  <div class="contents_container fs_modal_file_viewer_content">
-    <div class="contents">
-      <header class="fs_modal_file_viewer_header external">
-
-        <div class="file_header_detailed" style="margin-left: 5px;">
-          <span class=" member_preview_link member_image thumb_48" data-member-id="${this.user.id}" data-thumb-size="48" style="background-image: url('${this.user.profile.image_48}')" aria-hidden="true">  </span>
-          <h2 class="title no_jumbomoji"></h2>
-          <p class="file_meta">
-            <a href="/team/${this.user.id}" target="/team/${this.user.id}" class="message_sender color_U9S39304X color_684b6c member member_preview_link " data-member-id="${this.user.id}">${this.user._real_name_normalized_lc}</a>
-            <span class="bullet" aria-hidden="true"></span>
-          </p>
-        </div>
-
-        <div class="controls">
-          <a href="${this.url}" rel="noreferrer" target="_blank" class="open_btn control_btn btn_icon btn ts_icon ts_icon_external_link ts_tip ts_tip_bottom">
-            <span class="ts_tip_tip">オリジナルを開く</span>
-          </a>
-          <button id="fs_modal_close_btn" class="close_btn control_btn btn_icon btn ts_icon ts_icon_times ts_tip ts_tip_bottom ts_tip_right">
-            <div class="ts_tip_tip">閉じる
-              <div class="muted_tooltip_info">(esc)</div>
+    mount(target) {
+        const element = document.createElement('div');
+        element.innerHTML = `
+<div class="ReactModalPortal">
+   <div class="ReactModal__Overlay ReactModal__Overlay--after-open c-fullscreen_modal p-file_viewer__modal_overlay">
+      <div class="c-fullscreen_modal__content c-fullscreen_modal__content--before-open c-fullscreen_modal__content--after-open" tabindex="-1" role="dialog" aria-label="${this.url}">
+         <div class="c-fullscreen_modal__body p-file_viewer__body c-fullscreen_modal__body--full_bleed">
+            <div class="c-fullscreen_modal__body__content c-fullscreen_modal__body__content--full_bleed">
+               <div class="p-file_viewer">
+                  <div class="p-file_viewer__header">
+                     <div class="p-file_viewer__header__meta">
+                        <span class="p-file_viewer__header__meta__avatar c-avatar" style="height: 36px; line-height: 36px; width: 36px;"><img class="c-avatar__image" src="${this.user.image}" alt=""></span>
+                        <div class="p-file_viewer__header__meta__stack">
+                           <div class="p-file_viewer__header__meta__title" data-qa="file_viewer_header_title">${this.url}</div>
+                           <div class="p-file_viewer__header__meta__minor"><span class="p-file_viewer__header__meta__name">${this.user.name}</span></div>
+                        </div>
+                     </div>
+                     <div class="p-file_viewer__header__actions">
+                        <div class="p-file_viewer__header__separator"></div>
+                        <button class="close c-button-unstyled c-icon_button c-icon_button--null p-file_viewer__header__button" type="button"><i class="c-icon c-icon--times" type="times" aria-hidden="true"></i></button>
+                     </div>
+                  </div>
+                  <div class="p-file_viewer__content">
+                     <div class="p-image_viewer">
+                        <img class="p-image_viewer__image" src="${this.url}">
+                     </div>
+                  </div>
+               </div>
             </div>
-          </button>
-        </div>
-      </header>
-
-      <div class="viewer" id="fs_modal_image_viewer">
-        <div class="images">
-          <figure class="scaled">
-            <img src="${this.url}" alt="" class="scaled_image no_zoom">
-          </figure>
-          <figure class="actual_pixel">
-            <div class="actual_pixel_center">
-              <img src="${this.url}" alt="" class="actual_pixel_image">
-            </div>
-          </figure>
-        </div>
+         </div>
       </div>
-    </div>
-  </div>
-</div>`)
-            .keydown((e) => {
-                event.preventDefault();
-                event.stopPropagation();
-                if (e.keyCode === 27) this.$element.remove();
-                return false;
-            });
-        this.$element.find('#fs_modal_close_btn, #fs_modal_image_viewer').click(() => {
-            this.$element.remove();
+   </div>
+</div>`;
+        target.appendChild(element);
+        element.addEventListener('keydown', (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            if (event.keyCode === 27) element.remove();
+            return false;
         });
+        element.querySelectorAll('.close, .p-image_viewer').forEach((el) => {
+            el.addEventListener('click', () => {
+                element.remove();
+            });
+        });
+        element.focus();
     }
 }

@@ -17,7 +17,6 @@ class CreateLoaderPlugin {
 // @version      0.1
 // @author       wamei
 // @match        https://*.slack.com/*
-// @require https://code.jquery.com/jquery-3.4.1.min.js
 // ==/UserScript==`,
                     fs.readFileSync(at),
                 ].join('\n\n'));

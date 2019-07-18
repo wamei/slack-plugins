@@ -1,5 +1,54 @@
+import User from './user.js';
+
 const PREFIX = 'wamei:';
 class Util {
+    getUserId() {
+        var data =JSON.parse(localStorage.getItem('localConfig_v2'));
+        return data.teams[data.lastActiveTeamId].user_id;
+    }
+
+    onElementInserted(selector, callback) {
+        if (!this.elementInsertedSelector) {
+            this.elementInsertedSelector = {};
+            let style = document.createElement('style');
+            style.innerHTML = `@-webkit-keyframes elementInserted { 0% {opacity: 0;} 100% {opacity: 1;} }`;
+            document.querySelector('head').appendChild(style);
+        }
+        if (!this.elementInsertedSelector[selector]) {
+            this.elementInsertedSelector[selector] = [];
+            let style = document.createElement('style');
+            style.innerHTML = `${selector} { -webkit-animation: elementInserted 0.001s 1; }`;
+            document.querySelector('head').appendChild(style);
+            document.addEventListener('webkitAnimationStart', (event) => {
+                if (event.animationName == 'elementInserted') {
+                    this.elementInsertedSelector[selector].forEach((callback) => {
+                        callback(event.target);
+                    });
+                }
+            });
+        }
+        this.elementInsertedSelector[selector].push(callback);
+    }
+
+    getUserFromMessageElement(message) {
+        message = message.closest('.c-virtual_list__item, ts-message');
+        while(true) {
+            let userLink = message.querySelector('a[data-message-sender^="U"]');
+            if (userLink) {
+                const id = userLink.dataset.messageSender;
+                const name = userLink.innerText;
+                const image = message.querySelector('img.c-avatar__image').src;
+                return new User(id, name, image);
+            }
+            message = message.previousElementSibling;
+            if (message) {
+                return new User(null, null, null);
+            }
+        }
+    }
+
+    //------------------------------------------------------------------
+
     getUserIdFromMessage(message) {
         message = message.closest('.c-virtual_list__item, ts-message');
         while(true) {
@@ -88,25 +137,6 @@ class Util {
                 callback(e, target);
             }
         });
-    }
-
-    onElementInserted(selector, callback) {
-        if (!this.elementInsertedSelector) {
-            this.elementInsertedSelector = {};
-            $('head').append(`<style>@-webkit-keyframes elementInserted { 0% {opacity: 0;} 100% {opacity: 1;} }</style>`);
-        }
-        if (!this.elementInsertedSelector[selector]) {
-            this.elementInsertedSelector[selector] = [];
-            $('head').append(`<style>${selector} { -webkit-animation: elementInserted 0.001s 1; }</style>`);
-            document.addEventListener('webkitAnimationStart', (event) => {
-                if (event.animationName == 'elementInserted') {
-                    this.elementInsertedSelector[selector].forEach((callback) => {
-                        callback(event);
-                    });
-                }
-            });
-        }
-        this.elementInsertedSelector[selector].push(callback);
     }
 
     get settings() {
