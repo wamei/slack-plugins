@@ -3,19 +3,18 @@ export default class MessageInput {
         this.target = target;
     }
 
-    get $input() {
-        return $(this.target).find('.ql-editor');
+    get inputElement() {
+        return document.querySelector(this.target).querySelector('.ql-editor');
     }
 
     focus() {
-        const input = this.$input.get(0);
         const range = document.createRange();
         const sel = window.getSelection();
-        range.setStartAfter(input.lastChild);
+        range.setStartAfter(this.inputElement.lastChild);
         range.collapse(true);
         sel.removeAllRanges();
         sel.addRange(range);
-        input.focus();
+        this.inputElement.focus();
     }
 
     normalize(text) {
@@ -31,18 +30,18 @@ export default class MessageInput {
     }
 
     isEmpty() {
-        return this.$input.is('.ql-blank');
+        return this.inputElement.classList.contains('ql-blank');
     }
 
     clear() {
-        this.$input.empty();
+        this.inputElement.innerHTML = '';
     }
 
     appendText(text) {
-        this.$input.append(this.convertNewline(this.normalize(text)));
+        this.inputElement.innerHTML += this.convertNewline(this.normalize(text));
     }
 
     appendQuotedText(text) {
-        this.$input.append(this.convertNewline(this.quoteText(this.normalize(text))));
+        this.inputElement.innerHTML += this.convertNewline(this.quoteText(this.normalize(text)));
     }
 }

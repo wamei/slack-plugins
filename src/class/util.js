@@ -10,17 +10,24 @@ class Util {
     onElementInserted(selector, callback) {
         if (!this.elementInsertedSelector) {
             this.elementInsertedSelector = {};
-            let style = document.createElement('style');
-            style.innerHTML = `@-webkit-keyframes elementInserted { 0% {opacity: 0;} 100% {opacity: 1;} }`;
-            document.querySelector('head').appendChild(style);
         }
         if (!this.elementInsertedSelector[selector]) {
             this.elementInsertedSelector[selector] = [];
-            let style = document.createElement('style');
-            style.innerHTML = `${selector} { -webkit-animation: elementInserted 0.001s 1; }`;
-            document.querySelector('head').appendChild(style);
+            if (!window.elementInsertedSelectorCount) {
+                window.elementInsertedSelectorCount = 0;
+            }
+            const count = ++window.elementInsertedSelectorCount;
+
+            const style1 = document.createElement('style');
+            style1.innerHTML = `@-webkit-keyframes elementInserted${count} { 0% {opacity: 0;} 100% {opacity: 1;} }`;
+            document.querySelector('head').appendChild(style1);
+
+            const style2 = document.createElement('style');
+            style2.innerHTML = `${selector} { -webkit-animation: elementInserted${count} 0.001s 1; }`;
+            document.querySelector('head').appendChild(style2);
+
             document.addEventListener('webkitAnimationStart', (event) => {
-                if (event.animationName == 'elementInserted') {
+                if (event.animationName == `elementInserted${count}`) {
                     this.elementInsertedSelector[selector].forEach((callback) => {
                         callback(event.target);
                     });
@@ -161,5 +168,4 @@ class Util {
         });
     }
 }
-const util = new Util();
-export default util;
+export default new Util();
