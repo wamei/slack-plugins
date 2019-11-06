@@ -1,6 +1,10 @@
 import User from './user.js';
 
 const PREFIX = 'wamei:';
+
+const user_cache_id = {};
+const user_cache_name = {};
+
 class Util {
     getUserId() {
         var data =JSON.parse(localStorage.getItem('localConfig_v2'));
@@ -48,6 +52,14 @@ class Util {
         checker();
     };
 
+    getUserFromUserId(userId) {
+        return user_cache_id[userId];
+    }
+
+    getUserFromName(name) {
+        return this.getUserFromUserId(user_cache_name[name]);
+    }
+
     getUserFromMessageElement($message) {
         $message = $message.closest('.c-virtual_list__item');
         while(true) {
@@ -56,7 +68,10 @@ class Util {
                 const id = userLink.dataset.messageSender;
                 const name = userLink.innerText;
                 const image = $message.querySelector('img.c-avatar__image').src;
-                return new User(id, name, image);
+                const user = new User(id, name, image);
+                user_cache_id[id] = user;
+                user_cache_name[name] = id;
+                return user;
             }
             $message = $message.previousElementSibling;
             if (!$message) {

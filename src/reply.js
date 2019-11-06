@@ -64,6 +64,27 @@ import Util from './class/util.js';
         MessageMenu.applyButtons($target, new MessageInput($input));
     });
 
+    const treatedClass = 'wamei-treated';
+    Util.onElementInserted('.c-message, .c-message_kit__message, ts-message', ($target) => {
+        const preamble = $target.querySelector('.c-message__broadcast_preamble');
+        if (preamble) {
+            preamble.style.fontSize = '10px';
+        }
+        const preambleLink = $target.querySelector('.c-message__broadcast_preamble_link');
+        if (preambleLink) {
+            preambleLink.style.color =  '#717274';
+        }
+        $target.querySelectorAll(`blockquote b:not(.${treatedClass}), .special_formatting_quote b:not(.${treatedClass})`).forEach((elm) => {
+            const name = elm.innerText;
+            elm.classList.add(treatedClass);
+            const user = Util.getUserFromName(name);
+            if (!user) {
+                return;
+            }
+            elm.innerHTML = `<img class="c-message_attachment__author_icon" alt="${user.name}" src="${user.image}" width="16" height="16">${user.name}`;
+        });
+    });
+
     Util.executeOnLoad(() => {
         return XMLHttpRequest.prototype.open;
     }, () => {
