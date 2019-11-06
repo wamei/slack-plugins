@@ -1,9 +1,8 @@
 export default class Message {
-    constructor(userId, messageUri, wholeMessage, relatedInput) {
-        this.userId = userId;
-        this.messageUri = messageUri;
-        this.wholeMessage = wholeMessage;
-        this.relatedInput = relatedInput;
-        this.selectedMessage = '';
+    constructor(user, uri, text) {
+        this.user = user;
+        this.uri = uri;
+        this.text = text;
+        this.selected = '';
     }
 }

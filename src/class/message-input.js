@@ -4,7 +4,7 @@ export default class MessageInput {
     }
 
     get inputElement() {
-        return document.querySelector(this.target).querySelector('.ql-editor');
+        return this.target;
     }
 
     focus() {

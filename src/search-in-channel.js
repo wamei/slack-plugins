@@ -5,7 +5,6 @@ import MessageInput from './class/message-input.js';
 (function() {
     'use strict';
 
-    const messageInput = new MessageInput('.c-search__input_box');
     Util.onElementInserted('div[data-qa="channel_header__buttons"]', (elm) => {
         const button = document.createElement('button');
         button.id = 'search-in-channel';
@@ -18,6 +17,7 @@ import MessageInput from './class/message-input.js';
             Util.executeOnLoad(() => {
                 return document.querySelector('.ReactModal__Content[aria-label="検索"]');
             }, () => {
+                const messageInput = new MessageInput(document.querySelector('.c-search__input_box .ql-editor'));
                 const cid = location.href.split('/')[5];
                 let target = '';
                 switch(cid.charAt(0)) {

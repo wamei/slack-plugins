@@ -1,50 +1,44 @@
 import MessageMenu from './class/message-menu.js';
 import MessageInput from './class/message-input.js';
-import MenuActionButton from './class/menu-action-button.js';
+import MenuActionButtonFactory from './factory/menu-action-button.js';
 import Util from './class/util.js';
 
 (function() {
     'use strict';
 
-    const quoteButton = new MenuActionButton('メッセージを引用する', 'ts_icon_quote', function(message) {
-        const messageInput = new MessageInput(message.relatedInput);
-        if (messageInput.isEmpty()) {
-            messageInput.clear();
+    const quoteButton = MenuActionButtonFactory.create('メッセージを引用する', 'small-quote', function(input, message) {
+        if (input.isEmpty()) {
+            input.clear();
         }
-        if (message.userId != null) {
-            const user = Util.getUserByUserId(message.userId);
-            if (user) {
-                messageInput.appendQuotedText(`*${user.display_name}*`);
-            }
+        if (message.user.id != null) {
+            input.appendQuotedText(`*${message.user.name}*`);
         }
-        if (message.selectedMessage != '') {
-            messageInput.appendQuotedText(`${message.selectedMessage}`);
+        if (message.selected != '') {
+            input.appendQuotedText(`${message.selected}`);
         } else {
-            messageInput.appendQuotedText(`${message.wholeMessage}`);
+            input.appendQuotedText(`${message.text}`);
         }
-        messageInput.appendText('');
-        messageInput.focus();
+        input.appendText('');
+        input.focus();
     });
 
-    const replyButton = new MenuActionButton('メッセージに返信する', 'c-icon--share-action" style="transform: scale(-1, 1);"', function(message) {
-        const messageInput = new MessageInput(message.relatedInput);
-        const user = Util.getUserByUserId(message.userId);
-        if (!user) {
+    const replyButton = MenuActionButtonFactory.create('メッセージに返信する', 'share-action', function(input, message) {
+        if (!message.user.id) {
             return;
         }
-        if (messageInput.isEmpty()) {
-            messageInput.clear();
+        if (input.isEmpty()) {
+            input.clear();
         }
-        const uri = message.messageUri.indexOf('/') == 0 ? location.origin + message.messageUri: message.messageUri;
-        messageInput.appendText(Util.createMessageLink(uri, message.userId, user.display_name));
-        if (message.selectedMessage != '') {
-            messageInput.appendQuotedText(`${message.selectedMessage}`);
+        const uri = message.uri.indexOf('/') == 0 ? location.origin + message.uri: message.uri;
+        input.appendText(Util.createMessageLink(uri, message.user.id, message.user.name));
+        if (message.selected != '') {
+            input.appendQuotedText(`${message.selected}`);
         }
-        messageInput.appendText('');
-        messageInput.focus();
-    });
+        input.appendText('');
+        input.focus();
+    }, 'transform: scale(-1, 1);');
     replyButton.isAvailable = function(message) {
-        if (!message.userId) {
+        if (!message.user.id) {
             return false;
         }
         return true;
@@ -53,28 +47,30 @@ import Util from './class/util.js';
     MessageMenu.append(replyButton);
     MessageMenu.append(quoteButton);
 
-    const treatedClass = 'wamei-quote-icon-treated';
-    Util.onElementInserted('.c-message, .c-message_kit__message, ts-message', (event) => {
-        const message = $(event.target);
-        message.find('.c-message__broadcast_preamble').css('font-size', '10px');
-        message.find('.c-message__broadcast_preamble_link').css('color', '#717274');
-        message.find(`blockquote b:not(.${treatedClass}), .special_formatting_quote b:not(.${treatedClass})`).each((i, elm) => {
-            const $this = $(elm);
-            const name = $this.text();
-            $this.addClass(treatedClass);
-            const user = Util.getUserByName(name);
-            if (!user) {
-                return;
-            }
-            $this.html(`<img class="c-message_attachment__author_icon" alt="${user.display_name}" src="${user.avatar_icon}" width="16" height="16">${user.display_name}`);
-        });
+    Util.onElementInserted('.c-message_actions__container', ($target) => {
+        const $item = $target.closest('.c-virtual_list__item');
+        let $input;
+        try {
+            const id = $item.getAttribute('id').replace(/threads_view_(root-)?(.+?-\d+\.\d+)(-\d+\.\d+)?/, '$2').replace('.', '\\.');
+            $input = document.querySelector(`#threads_view_footer-${id} .ql-editor`);
+        } catch(error) {
+        }
+        if (!$input) {
+            $input = $item.parentElement.querySelector('.ql-editor');
+        }
+        if (!$input) {
+            $input = document.querySelector('.p-message_input .ql-editor');
+        }
+        MessageMenu.applyButtons($target, new MessageInput($input));
     });
 
-    Util.executeOnLoad('XMLHttpRequest.prototype.open', () => {
+    Util.executeOnLoad(() => {
+        return XMLHttpRequest.prototype.open;
+    }, () => {
         const oldOpen = XMLHttpRequest.prototype.open;
         const oldSend = XMLHttpRequest.prototype.send;
         XMLHttpRequest.prototype.open = function(method, url) {
-            if (url.startsWith('/api/chat.postMessage')) {
+            if (url.indexOf('/api/chat.postMessage') != -1) {
                 this.send = function(formData) {
                     if (formData.get('type') != 'message') {
                         return oldSend.call(this, formData);
@@ -85,7 +81,17 @@ import Util from './class/util.js';
                     if (matched) {
                         const threadTs = formData.get('thread_ts');
                         if (!threadTs) {
-                            formData.append('thread_ts', Util.getTSfromUri(matched[2]));
+                            function getTSfromUri(uri) {
+                                let ts_candidate = uri.match(/\/archives\/.+\/p(\d+)(\?thread_ts=(\d+\.\d+))?.*/);
+                                if (ts_candidate[3]) {
+                                    return ts_candidate[3];
+                                } else if (ts_candidate[1]) {
+                                    let ts = ts_candidate[1];
+                                    return `${ts.slice(0, ts.length - 6)}.${ts.slice(-6)}`;
+                                }
+                                return null;
+                            }
+                            formData.append('thread_ts', getTSfromUri(matched[2]));
                             formData.append('reply_broadcast', 'true');
                         }
                         formData.delete('text');
