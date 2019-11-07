@@ -20,9 +20,7 @@ export default class MenuActionButton {
         $wrap.style.position = 'relative';
         const $tooltip = $wrap.firstElementChild;
         $tooltip.style.position = 'absolute';
-        $tooltip.style.zIndex = '99999';
         $tooltip.style.display = 'none';
-        $tooltip.style.width = '200px';
         $element.appendChild($wrap);
         $element.addEventListener('click', () => {
             this.callback(input, message);
