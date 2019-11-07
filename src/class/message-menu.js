@@ -20,7 +20,7 @@ class MessageMenu {
             body = $message.querySelector('.message_body');
             wholeText = body ? body.innerHTML.replace('<span class="constrain_triple_clicks"></span>', '').trim() : '';
         }
-        wholeText = wholeText.replace(/<a href="(https:\/\/.+?)" .+?>Re:<\/a><a .+?>@(.+?)<\/a>/gm, Util.createMessageLink('$1', user.id, '$2'));
+        wholeText = wholeText.replace(/<a href="(https:\/\/.+?)" .+?>Re:<\/a><a .+?>@(.+?)<\/a>/gm, Util.createMessageLink('$1', user.id, '$2')).replace(/<span class="c-message__edited_label".+?>.+?<\/span>$/, '');
         let attachments = '';
         $message.querySelectorAll('.c-message__attachments, .c-message_kit__attachments').forEach(($elm) => {
             if ($elm.classList.contains('c-message_attachment__delete')) {
