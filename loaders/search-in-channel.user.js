@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         wamei-search-in-channel
 // @namespace    wamei
-// @version      0.6
+// @version      0.7
 // @author       wamei
 // @match        https://*.slack.com/*
 // ==/UserScript==

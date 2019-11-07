@@ -14,7 +14,7 @@ class CreateLoaderPlugin {
                     `// ==UserScript==
 // @name         wamei-${key}
 // @namespace    wamei
-// @version      0.6
+// @version      0.7
 // @author       wamei
 // @match        https://*.slack.com/*
 // ==/UserScript==`,
