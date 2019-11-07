@@ -6,7 +6,7 @@ import Util from './class/util.js';
     const mentionColorLight = '#ddebd7';
     const mentionHoverColorLight = '#e7efe4';
     const mentionColorDark = '#2f4626';
-    const mentionHoverColorDark = '#436337';
+    const mentionHoverColorDark = '#3d5832';
     const mention = (message, target) => {
         if (!message.querySelector(target)) {
             return;
