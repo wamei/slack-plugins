@@ -44,8 +44,8 @@ import Util from './class/util.js';
         return true;
     };
 
-    MessageMenu.append(replyButton);
-    MessageMenu.append(quoteButton);
+    //MessageMenu.append(replyButton);
+    //MessageMenu.append(quoteButton);
 
     Util.onElementInserted('.c-message_actions__container', ($target) => {
         const $item = $target.closest('.c-virtual_list__item');
@@ -85,44 +85,44 @@ import Util from './class/util.js';
         });
     });
 
-    Util.executeOnLoad(() => {
-        return XMLHttpRequest.prototype.open;
-    }, () => {
-        const oldOpen = XMLHttpRequest.prototype.open;
-        const oldSend = XMLHttpRequest.prototype.send;
-        XMLHttpRequest.prototype.open = function(method, url) {
-            if (url.indexOf('/api/chat.postMessage') != -1) {
-                this.send = function(formData) {
-                    if (formData.get('type') != 'message') {
-                        return oldSend.call(this, formData);
-                    }
-                    const text = formData.get('text');
-                    const regExpString = '&lt;(.*(\/archives\/.+)\|Re:)&gt;';
-                    let matched = text.match(new RegExp(regExpString));
-                    if (matched) {
-                        const threadTs = formData.get('thread_ts');
-                        if (!threadTs) {
-                            function getTSfromUri(uri) {
-                                let ts_candidate = uri.match(/\/archives\/.+\/p(\d+)(\?thread_ts=(\d+\.\d+))?.*/);
-                                if (ts_candidate[3]) {
-                                    return ts_candidate[3];
-                                } else if (ts_candidate[1]) {
-                                    let ts = ts_candidate[1];
-                                    return `${ts.slice(0, ts.length - 6)}.${ts.slice(-6)}`;
-                                }
-                                return null;
-                            }
-                            formData.append('thread_ts', getTSfromUri(matched[2]));
-                            formData.append('reply_broadcast', 'true');
-                        }
-                        formData.delete('text');
-                        formData.append('text', text.replace(new RegExp(regExpString, 'gm'), '<$1>'));
-                        formData.append('unfurl_links', 'false');
-                    }
-                    return oldSend.call(this, formData);
-                };
-            }
-            return oldOpen.apply(this, arguments);
-        };
-    });
+    // Util.executeOnLoad(() => {
+    //     return XMLHttpRequest.prototype.open;
+    // }, () => {
+    //     const oldOpen = XMLHttpRequest.prototype.open;
+    //     const oldSend = XMLHttpRequest.prototype.send;
+    //     XMLHttpRequest.prototype.open = function(method, url) {
+    //         if (url.indexOf('/api/chat.postMessage') != -1) {
+    //             this.send = function(formData) {
+    //                 if (formData.get('type') != 'message') {
+    //                     return oldSend.call(this, formData);
+    //                 }
+    //                 const text = formData.get('text');
+    //                 const regExpString = '&lt;(.*(\/archives\/.+)\|Re:)&gt;';
+    //                 let matched = text.match(new RegExp(regExpString));
+    //                 if (matched) {
+    //                     const threadTs = formData.get('thread_ts');
+    //                     if (!threadTs) {
+    //                         function getTSfromUri(uri) {
+    //                             let ts_candidate = uri.match(/\/archives\/.+\/p(\d+)(\?thread_ts=(\d+\.\d+))?.*/);
+    //                             if (ts_candidate[3]) {
+    //                                 return ts_candidate[3];
+    //                             } else if (ts_candidate[1]) {
+    //                                 let ts = ts_candidate[1];
+    //                                 return `${ts.slice(0, ts.length - 6)}.${ts.slice(-6)}`;
+    //                             }
+    //                             return null;
+    //                         }
+    //                         formData.append('thread_ts', getTSfromUri(matched[2]));
+    //                         formData.append('reply_broadcast', 'true');
+    //                     }
+    //                     formData.delete('text');
+    //                     formData.append('text', text.replace(new RegExp(regExpString, 'gm'), '<$1>'));
+    //                     formData.append('unfurl_links', 'false');
+    //                 }
+    //                 return oldSend.call(this, formData);
+    //             };
+    //         }
+    //         return oldOpen.apply(this, arguments);
+    //     };
+    // });
 })();

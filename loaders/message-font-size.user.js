@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         wamei-message-font-size
 // @namespace    wamei
-// @version      0.7
+// @version      0.8
 // @author       wamei
 // @match        https://*.slack.com/*
 // ==/UserScript==
